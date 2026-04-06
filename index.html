@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuizTime! ข้อสอบสนุก</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#FEFCF8;font-family:'Nunito',system-ui,sans-serif}
+#qz{min-height:100vh;max-width:520px;margin:0 auto;padding:28px 18px 64px;position:relative;overflow:hidden}
+.scr{animation:pop .3s ease both}
+@keyframes pop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* LOGO & HOME */
+.logo{text-align:center;margin-bottom:28px;position:relative;z-index:1}
+.logo-box{width:78px;height:78px;border-radius:22px;background:#FFF3DC;border:2.5px solid #FCD34D;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px}
+.app-title{font-size:30px;font-weight:900;color:#1E293B;letter-spacing:-1px;margin-bottom:4px}
+.app-sub{font-size:14px;color:#64748B}
+.section-label{font-size:11px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:13px;position:relative;z-index:1}
+
+/* SUBJECT CARDS */
+.cards{display:flex;flex-direction:column;gap:13px;position:relative;z-index:1}
+.card-btn{display:flex;align-items:center;gap:15px;padding:17px 20px;border-radius:22px;border:2.5px solid transparent;cursor:pointer;font-family:'Nunito',sans-serif;text-align:left;width:100%;transition:transform .15s,border-color .15s}
+.card-btn:hover{transform:scale(1.025)}.card-btn:active{transform:scale(.975)}
+.sci-card{background:#DCFCE7;color:#14532D}.sci-card:hover{border-color:#16A34A}
+.math-card{background:#EDE9FE;color:#4C1D95}.math-card:hover{border-color:#7C3AED}
+.eng-card{background:#DBEAFE;color:#1E3A8A}.eng-card:hover{border-color:#2563EB}
+.card-name{font-size:20px;font-weight:900;margin-bottom:2px}.card-hint{font-size:13px;opacity:.65}
+
+/* GRADE */
+.grade-header{text-align:center;margin-bottom:24px}
+.grade-title{font-size:24px;font-weight:900;color:#1E293B;margin-bottom:5px}.grade-sub{font-size:14px;color:#64748B}
+.mascot-center{text-align:center;margin-bottom:20px}
+.grade-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:18px}
+.gbtn{border-radius:18px;border:2.5px solid #E2E8F0;background:white;padding:20px 10px;font-size:17px;font-weight:900;font-family:'Nunito',sans-serif;cursor:pointer;color:#1E293B;transition:transform .15s,background .15s,border-color .15s,color .15s;text-align:center}
+.gbtn:hover{transform:scale(1.05)}.gbtn:active{transform:scale(.96)}
+.g1:hover{background:#FEF3C7;border-color:#F59E0B;color:#92400E}
+.g2:hover{background:#DCFCE7;border-color:#16A34A;color:#14532D}
+.g3:hover{background:#EDE9FE;border-color:#7C3AED;color:#4C1D95}
+.g4:hover{background:#DBEAFE;border-color:#2563EB;color:#1E3A8A}
+
+/* SET SIZE TOGGLE */
+.set-row{display:flex;gap:10px;margin-bottom:4px}
+.sbtn{flex:1;border-radius:14px;border:2px solid #E2E8F0;background:white;padding:11px 6px;font-size:14px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;color:#64748B;transition:all .15s}
+.sbtn.active,.sbtn:hover{background:#F1F5F9;border-color:#94A3B8;color:#1E293B}
+
+.back{background:none;border:none;font-family:'Nunito',sans-serif;color:#94A3B8;font-size:14px;font-weight:700;cursor:pointer;padding:8px 0;display:flex;align-items:center;gap:6px;margin-bottom:16px}
+.back:hover{color:#475569}
+
+/* QUIZ */
+.qz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.qz-label{font-size:12px;font-weight:800;color:#64748B;text-transform:uppercase;letter-spacing:.6px}
+.qz-score{background:#F1F5F9;border-radius:99px;padding:5px 15px;font-size:13px;font-weight:900;color:#1E293B}
+.prog{height:9px;background:#E2E8F0;border-radius:99px;overflow:hidden;margin-bottom:20px}
+.prog-fill{height:100%;border-radius:99px;transition:width .4s ease}
+.sci-fill{background:#16A34A}.math-fill{background:#7C3AED}.eng-fill{background:#2563EB}
+
+.qcard{background:white;border:1.5px solid #E2E8F0;border-radius:22px;padding:22px;margin-bottom:14px}
+.qnum{font-size:11px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:.7px;margin-bottom:9px}
+.qtext{font-size:18px;font-weight:800;color:#1E293B;line-height:1.55}
+
+.opts{display:flex;flex-direction:column;gap:9px;margin-bottom:13px}
+.opt{display:flex;align-items:center;gap:12px;border-radius:16px;border:2px solid #E2E8F0;background:white;padding:13px 15px;font-size:15px;font-weight:600;color:#1E293B;font-family:'Nunito',sans-serif;cursor:pointer;text-align:left;width:100%;transition:transform .12s,border-color .12s,background .12s}
+.opt:not(.done):hover{border-color:#94A3B8;transform:scale(1.01)}.opt:not(.done):active{transform:scale(.98)}
+.opt.done{cursor:default}
+.opt.correct{background:#DCFCE7;border-color:#16A34A;color:#14532D}
+.opt.wrong{background:#FEE2E2;border-color:#DC2626;color:#7F1D1D}
+.olabel{width:31px;height:31px;border-radius:50%;background:#F1F5F9;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#64748B}
+.opt.correct .olabel{background:#16A34A;color:white}.opt.wrong .olabel{background:#DC2626;color:white}
+
+.fb{border-radius:14px;padding:12px 16px;font-size:14px;font-weight:700;margin-bottom:12px;display:none}
+.fb.show{display:block}.fb.ok{background:#DCFCE7;color:#14532D}.fb.no{background:#FEE2E2;color:#7F1D1D}
+
+.nxt{width:100%;border-radius:16px;border:none;padding:16px;font-size:17px;font-weight:900;font-family:'Nunito',sans-serif;cursor:pointer;color:white;transition:transform .12s;display:none}
+.nxt.show{display:block}.nxt:hover{transform:scale(1.02)}.nxt:active{transform:scale(.978)}
+.sci-nxt{background:#16A34A}.math-nxt{background:#7C3AED}.eng-nxt{background:#2563EB}
+
+/* RESULT */
+.res{text-align:center;padding:8px 0}
+.score-ring{width:130px;height:130px;border-radius:50%;background:#F8FAFC;border:3px solid #E2E8F0;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:14px auto 20px}
+.score-n{font-size:42px;font-weight:900;color:#1E293B;line-height:1}
+.score-of{font-size:13px;color:#64748B;font-weight:700}
+.stars{display:flex;justify-content:center;gap:7px;margin-bottom:20px}
+.res-title{font-size:25px;font-weight:900;color:#1E293B;margin-bottom:7px}
+.res-msg{font-size:14px;color:#64748B;margin-bottom:28px;line-height:1.6}
+.res-btns{display:flex;flex-direction:column;gap:10px}
+.btn-p{border-radius:16px;border:none;padding:16px;font-size:16px;font-weight:900;font-family:'Nunito',sans-serif;cursor:pointer;color:white;transition:transform .12s}
+.btn-p:hover{transform:scale(1.02)}
+.btn-s{border-radius:16px;border:2px solid #E2E8F0;background:white;padding:13px;font-size:15px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;color:#475569;transition:transform .12s,background .12s}
+.btn-s:hover{background:#F8FAFC;transform:scale(1.01)}
+
+/* BADGE */
+.badge{display:inline-block;background:#F1F5F9;border-radius:99px;padding:4px 14px;font-size:12px;font-weight:700;color:#64748B;margin-bottom:16px}
+
+/* ANIM */
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.bnc{animation:bounce 2.2s ease-in-out infinite}
+.bnc2{animation:bounce 2.2s ease-in-out infinite;animation-delay:.4s}
+.bnc3{animation:bounce 2.2s ease-in-out infinite;animation-delay:.8s}
+.dc{position:absolute;border-radius:50%;pointer-events:none;z-index:0}
+
+/* GUIDE SCREEN */
+.guide-subj-tabs{display:flex;gap:8px;margin-bottom:18px;overflow-x:auto;padding-bottom:4px}
+.gtab{flex-shrink:0;border-radius:99px;border:2px solid #E2E8F0;background:white;padding:8px 16px;font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;color:#64748B;transition:all .15s}
+.gtab.active-sci{background:#DCFCE7;border-color:#16A34A;color:#14532D}
+.gtab.active-math{background:#EDE9FE;border-color:#7C3AED;color:#4C1D95}
+.gtab.active-eng{background:#DBEAFE;border-color:#2563EB;color:#1E3A8A}
+
+.topic-card{background:white;border:1.5px solid #E2E8F0;border-radius:18px;margin-bottom:13px;overflow:hidden}
+.topic-head{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;user-select:none}
+.topic-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.topic-title{font-size:15px;font-weight:900;color:#1E293B;flex:1}
+.topic-chevron{color:#94A3B8;font-size:12px;transition:transform .2s}
+.topic-chevron.open{transform:rotate(180deg)}
+.topic-body{display:none;padding:0 16px 16px;border-top:1.5px solid #F1F5F9}
+.topic-body.open{display:block}
+
+.formula-box{background:#F8FAFC;border-radius:12px;padding:12px 14px;margin-bottom:10px;border-left:3px solid #CBD5E1}
+.formula-box.sci{border-left-color:#16A34A;background:#F0FDF4}
+.formula-box.math{border-left-color:#7C3AED;background:#F5F3FF}
+.formula-box.eng{border-left-color:#2563EB;background:#EFF6FF}
+.formula-title{font-size:12px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+.formula-main{font-size:17px;font-weight:900;color:#1E293B;margin-bottom:6px;font-family:monospace}
+.formula-desc{font-size:13px;color:#475569;line-height:1.65}
+.formula-ex{margin-top:8px;background:white;border-radius:8px;padding:8px 10px;font-size:13px;color:#1E293B;border:1px solid #E2E8F0}
+.ex-label{font-size:11px;font-weight:800;color:#94A3B8;margin-bottom:3px}
+.ex-q{color:#374151;font-weight:700;margin-bottom:4px}
+.ex-a{color:#16A34A;font-weight:800}
+.ex-a.math{color:#7C3AED}
+.ex-a.eng{color:#2563EB}
+
+.tip-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.tip-pill{border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700}
+.tip-green{background:#DCFCE7;color:#14532D}
+.tip-purple{background:#EDE9FE;color:#4C1D95}
+.tip-blue{background:#DBEAFE;color:#1E3A8A}
+.tip-amber{background:#FEF3C7;color:#92400E}
+.tip-red{background:#FEE2E2;color:#7F1D1D}
+
+.eng-table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0}
+.eng-table th{background:#EFF6FF;color:#1E3A8A;font-weight:800;padding:8px 10px;text-align:left;border:1px solid #BFDBFE}
+.eng-table td{padding:7px 10px;border:1px solid #E2E8F0;color:#374151;font-weight:600}
+.eng-table tr:nth-child(even) td{background:#F8FAFC}
+.eng-table .hl{color:#2563EB;font-weight:900}
+
+/* GUIDE BTN on home */
+.guide-link{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#64748B;background:none;border:none;cursor:pointer;font-family:'Nunito',sans-serif;padding:4px 0;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
+.guide-link:hover{color:#1E293B}
+
+/* RANDOM INDICATOR */
+.rand-badge{background:linear-gradient(135deg,#F0FDF4,#DCFCE7);border:1.5px solid #86EFAC;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:700;color:#166534;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* HOME BUTTON in quiz */
+.quiz-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.home-btn{background:none;border:1.5px solid #E2E8F0;border-radius:12px;padding:7px 12px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#64748B;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .15s,color .15s,border-color .15s}
+.home-btn:hover{background:#FEF2F2;border-color:#FECACA;color:#DC2626}
+
+/* CONFIRM MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.45);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px}
+.modal-box{background:white;border-radius:24px;padding:28px 24px;max-width:320px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.modal-icon{font-size:44px;margin-bottom:12px}
+.modal-title{font-size:19px;font-weight:900;color:#1E293B;margin-bottom:8px}
+.modal-msg{font-size:14px;color:#64748B;margin-bottom:22px;line-height:1.6}
+.modal-btns{display:flex;gap:10px}
+.modal-cancel{flex:1;border-radius:14px;border:2px solid #E2E8F0;background:white;padding:13px;font-size:15px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;color:#475569;transition:background .12s}
+.modal-cancel:hover{background:#F8FAFC}
+.modal-confirm{flex:1;border-radius:14px;border:none;background:#EF4444;padding:13px;font-size:15px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;color:white;transition:transform .12s}
+.modal-confirm:hover{transform:scale(1.03)}
+
+/* PLAYER FORM */
+.player-card{background:white;border:1.5px solid #E2E8F0;border-radius:18px;padding:16px 16px 14px;margin-bottom:16px}
+.player-label{font-size:12px;font-weight:800;color:#64748B;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.player-input{width:100%;border-radius:14px;border:2px solid #E2E8F0;background:#fff;padding:14px 15px;font-size:16px;font-weight:700;font-family:'Nunito',sans-serif;color:#1E293B;outline:none;transition:border-color .15s, box-shadow .15s}
+.player-input:focus{border-color:#94A3B8;box-shadow:0 0 0 4px rgba(148,163,184,.15)}
+.player-help{font-size:12px;line-height:1.6;color:#64748B;margin-top:8px}
+.player-warn{margin-top:10px;background:#FFF7ED;border:1px solid #FED7AA;color:#9A3412;border-radius:12px;padding:10px 12px;font-size:12px;font-weight:700;display:none}
+.player-warn.show{display:block}
+.status-note{font-size:12px;color:#64748B;margin-top:10px}
+
+</style>
+</head>
+<body>
+<div id="qz"></div>
+<script>
+/* ── MASCOT SVG ── */
+const MSK={
+science:`<circle cx="40" cy="50" r="27" fill="#FECDD3"/>
+<polygon points="16,29 7,6 31,23" fill="#FECDD3"/><polygon points="64,29 73,6 49,23" fill="#FECDD3"/>
+<polygon points="17,27 11,10 29,21" fill="#FDA4AF"/><polygon points="63,27 69,10 51,21" fill="#FDA4AF"/>
+<circle cx="30" cy="50" r="11" fill="white" stroke="#374151" stroke-width="2.2"/>
+<circle cx="50" cy="50" r="11" fill="white" stroke="#374151" stroke-width="2.2"/>
+<line x1="39" y1="50" x2="41" y2="50" stroke="#374151" stroke-width="2.5"/>
+<line x1="19" y1="48" x2="14" y2="46" stroke="#374151" stroke-width="2"/>
+<line x1="61" y1="48" x2="66" y2="46" stroke="#374151" stroke-width="2"/>
+<circle cx="30" cy="51" r="6" fill="#1F2937"/><circle cx="50" cy="51" r="6" fill="#1F2937"/>
+<circle cx="32" cy="49" r="2.2" fill="white"/><circle cx="52" cy="49" r="2.2" fill="white"/>
+<ellipse cx="40" cy="60" rx="3.5" ry="2.5" fill="#FB7185"/>
+<path d="M33 65 Q40 72 47 65" fill="none" stroke="#FB7185" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="7" y1="54" x2="21" y2="57" stroke="#CBD5E1" stroke-width="1.6"/>
+<line x1="7" y1="61" x2="21" y2="61" stroke="#CBD5E1" stroke-width="1.6"/>
+<line x1="73" y1="54" x2="59" y2="57" stroke="#CBD5E1" stroke-width="1.6"/>
+<line x1="73" y1="61" x2="59" y2="61" stroke="#CBD5E1" stroke-width="1.6"/>`,
+math:`<ellipse cx="26" cy="21" rx="9" ry="23" fill="#DDD6FE"/>
+<ellipse cx="54" cy="21" rx="9" ry="23" fill="#DDD6FE"/>
+<ellipse cx="26" cy="21" rx="5" ry="16" fill="#C4B5FD"/>
+<ellipse cx="54" cy="21" rx="5" ry="16" fill="#C4B5FD"/>
+<circle cx="40" cy="54" r="25" fill="#EDE9FE"/>
+<circle cx="31" cy="50" r="10" fill="white"/><circle cx="49" cy="50" r="10" fill="white"/>
+<circle cx="31" cy="51" r="5.5" fill="#1F2937"/><circle cx="49" cy="51" r="5.5" fill="#1F2937"/>
+<circle cx="33" cy="49" r="2.2" fill="white"/><circle cx="51" cy="49" r="2.2" fill="white"/>
+<ellipse cx="40" cy="60" rx="3.5" ry="2.5" fill="#F472B6"/>
+<path d="M33 65 Q40 72 47 65" fill="none" stroke="#F472B6" stroke-width="2.2" stroke-linecap="round"/>
+<ellipse cx="40" cy="75" rx="8" ry="5" fill="#C4B5FD"/>`,
+english:`<ellipse cx="40" cy="65" rx="23" ry="17" fill="#FDE68A"/>
+<circle cx="40" cy="40" r="25" fill="#FCD34D"/>
+<polygon points="26,21 18,3 37,18" fill="#FCD34D"/><polygon points="54,21 62,3 43,18" fill="#FCD34D"/>
+<circle cx="29" cy="40" r="13" fill="white" stroke="#92400E" stroke-width="2.2"/>
+<circle cx="51" cy="40" r="13" fill="white" stroke="#92400E" stroke-width="2.2"/>
+<circle cx="29" cy="41" r="7" fill="#1F2937"/><circle cx="51" cy="41" r="7" fill="#1F2937"/>
+<circle cx="32" cy="38" r="2.5" fill="white"/><circle cx="54" cy="38" r="2.5" fill="white"/>
+<polygon points="40,51 34,59 46,59" fill="#F59E0B"/>
+<line x1="21" y1="30" x2="37" y2="33" stroke="#92400E" stroke-width="2.8" stroke-linecap="round"/>
+<line x1="59" y1="30" x2="43" y2="33" stroke="#92400E" stroke-width="2.8" stroke-linecap="round"/>`};
+function msvg(s,w){return`<svg width="${w}" height="${w}" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">${MSK[s]}</svg>`}
+function starSVG(on){const f=on?'#FBBF24':'#E5E7EB',k=on?'#F59E0B':'#D1D5DB';return`<svg width="44" height="44" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${f}" stroke="${k}" stroke-width="1" stroke-linejoin="round"/></svg>`}
+
+/* ════════════════════════════════════════════════════════
+   QUESTION BANK  –  60 questions × 3 subjects × 4 grades
+   ════════════════════════════════════════════════════════ */
+const QB={
+science:{
+1:[
+{q:"หน่วยพื้นฐานของสิ่งมีชีวิตทุกชนิดคืออะไร?",o:["เซลล์","ดีเอ็นเอ","โปรตีน","เอนไซม์"],a:0},
+{q:"น้ำบริสุทธิ์มีสูตรเคมีว่าอย่างไร?",o:["H₂O","CO₂","O₂","NaCl"],a:0},
+{q:"ดาวฤกษ์ที่อยู่ใกล้โลกที่สุดคืออะไร?",o:["ดวงอาทิตย์","ดาวพุธ","ดาวศุกร์","ดาวอังคาร"],a:0},
+{q:"สัตว์ชนิดใดที่เป็นสัตว์เลือดอุ่น?",o:["นก","ปลา","กบ","งู"],a:0},
+{q:"พืชใช้แก๊สใดในการสังเคราะห์แสง?",o:["CO₂","O₂","N₂","H₂"],a:0},
+{q:"สารใดเป็นองค์ประกอบของน้ำ?",o:["ไฮโดรเจนและออกซิเจน","คาร์บอนและออกซิเจน","ไนโตรเจนและออกซิเจน","ไฮโดรเจนและคาร์บอน"],a:0},
+{q:"กระดูกสันหลังมีจำนวนกี่ชิ้นในมนุษย์ผู้ใหญ่?",o:["26 ชิ้น","24 ชิ้น","30 ชิ้น","33 ชิ้น"],a:0},
+{q:"แสงอาทิตย์ใช้เวลากี่นาทีถึงโลก?",o:["8 นาที","1 นาที","30 นาที","60 นาที"],a:0},
+{q:"สัตว์ใดเป็นสัตว์เลี้ยงลูกด้วยนม?",o:["วาฬ","ฉลาม","กบ","ปลาทอง"],a:0},
+{q:"ธาตุใดเป็นก๊าซที่มีมากที่สุดในอากาศ?",o:["ไนโตรเจน","ออกซิเจน","คาร์บอนไดออกไซด์","อาร์กอน"],a:0},
+{q:"ดวงจันทร์โคจรรอบโลกใช้เวลาประมาณ?",o:["29.5 วัน","365 วัน","7 วัน","14 วัน"],a:0},
+{q:"ระบบย่อยอาหารเริ่มต้นที่อวัยวะใด?",o:["ปาก","กระเพาะ","ลำไส้เล็ก","หลอดอาหาร"],a:0},
+{q:"ผลไม้ชนิดใดมีวิตามิน C สูงมาก?",o:["ส้ม","แอปเปิ้ล","กล้วย","แตงโม"],a:0},
+{q:"แม่เหล็กมีขั้วกี่ขั้ว?",o:["2 ขั้ว","1 ขั้ว","3 ขั้ว","4 ขั้ว"],a:0},
+{q:"การหมุนของโลกรอบตัวเองใช้เวลาประมาณ?",o:["24 ชั่วโมง","12 ชั่วโมง","365 วัน","7 วัน"],a:0},
+{q:"เซลล์พืชมีส่วนใดที่เซลล์สัตว์ไม่มี?",o:["ผนังเซลล์","นิวเคลียส","เยื่อหุ้มเซลล์","ไมโทคอนเดรีย"],a:0},
+{q:"สัตว์ใดมีกระดูกสันหลัง (Vertebrate)?",o:["ปลา","หอยทาก","แมลง","ปูทะเล"],a:0},
+{q:"ปรากฏการณ์ใดเกิดจากโลกบังดวงอาทิตย์?",o:["จันทรุปราคา","สุริยุปราคา","ดาวตก","พระอาทิตย์ขึ้น"],a:0},
+{q:"หัวใจมนุษย์มีกี่ห้อง?",o:["4 ห้อง","2 ห้อง","3 ห้อง","1 ห้อง"],a:0},
+{q:"พลังงานแสงอาทิตย์เป็นพลังงานประเภทใด?",o:["พลังงานทดแทน","พลังงานซากดึกดำบรรพ์","พลังงานนิวเคลียร์","พลังงานเคมี"],a:0},
+{q:"สารใดละลายในน้ำได้ดีที่สุด?",o:["เกลือแกง","ทราย","น้ำมัน","ขี้ผึ้ง"],a:0},
+{q:"กล้องโทรทรรศน์ใช้ทำอะไร?",o:["ดูวัตถุไกล","ดูวัตถุเล็ก","วัดอุณหภูมิ","วัดความดัน"],a:0},
+{q:"กระดูกอ่อน (Cartilage) พบมากที่ใด?",o:["ใบหู","ฟัน","ผม","เล็บ"],a:0},
+{q:"การโคจรของโลกรอบดวงอาทิตย์ 1 รอบใช้เวลา?",o:["365.25 วัน","30 วัน","24 ชั่วโมง","7 วัน"],a:0},
+{q:"แมลงมีขากี่ขา?",o:["6 ขา","4 ขา","8 ขา","10 ขา"],a:0},
+{q:"สสารใดมีสถานะทั้ง 3 รูปแบบในธรรมชาติ?",o:["น้ำ","เหล็ก","ทองคำ","เกลือ"],a:0},
+{q:"ปรากฏการณ์โลกร้อนเกิดจากการเพิ่มขึ้นของแก๊สใด?",o:["CO₂","O₂","N₂","H₂"],a:0},
+{q:"ฟันแท้ของมนุษย์มีกี่ซี่?",o:["32 ซี่","20 ซี่","28 ซี่","36 ซี่"],a:0},
+{q:"เลนส์นูนทำให้แสงเกิดปรากฏการณ์ใด?",o:["รวมแสง","กระจายแสง","สะท้อนแสง","ดูดกลืนแสง"],a:0},
+{q:"ชั้นบรรยากาศชั้นใดใกล้โลกที่สุด?",o:["โทรโพสเฟียร์","สตราโทสเฟียร์","มีโซสเฟียร์","เทอร์โมสเฟียร์"],a:0},
+{q:"สิ่งมีชีวิตเซลล์เดียวที่มีนิวเคลียสเรียกว่า?",o:["โปรโตซัว","แบคทีเรีย","ไวรัส","ฟังไจ"],a:0},
+{q:"ฤดูกาลเกิดขึ้นเพราะสาเหตุใด?",o:["แกนโลกเอียง","โลกใกล้ดวงอาทิตย์","โลกหมุนเร็ว","ดวงจันทร์บัง"],a:0},
+{q:"ต่อมน้ำลายทำหน้าที่ใด?",o:["ย่อยแป้ง","ย่อยโปรตีน","ย่อยไขมัน","ดูดซึมแร่ธาตุ"],a:0},
+{q:"แก๊สใดที่มนุษย์ใช้หายใจ?",o:["ออกซิเจน","ไนโตรเจน","CO₂","อาร์กอน"],a:0},
+{q:"กระบวนการสังเคราะห์แสงเกิดที่ออร์แกเนลล์ใด?",o:["คลอโรพลาสต์","ไมโทคอนเดรีย","นิวเคลียส","กอลจิบอดี"],a:0},
+{q:"ตาของมนุษย์รับรู้สิ่งใด?",o:["แสง","เสียง","กลิ่น","รสชาติ"],a:0},
+{q:"ดาวเคราะห์ดวงใดอยู่ใกล้ดวงอาทิตย์ที่สุด?",o:["ดาวพุธ","ดาวศุกร์","โลก","ดาวอังคาร"],a:0},
+{q:"เซลล์เม็ดเลือดแดงทำหน้าที่ใด?",o:["ลำเลียงออกซิเจน","ต่อสู้เชื้อโรค","แข็งตัวของเลือด","ย่อยอาหาร"],a:0},
+{q:"ผิวหนังของมนุษย์ทำหน้าที่ใด?",o:["ป้องกันร่างกาย","ย่อยอาหาร","หมุนเวียนเลือด","กรองอากาศ"],a:0},
+{q:"พลังงานเสียงเคลื่อนที่เป็นคลื่นแบบใด?",o:["คลื่นตามยาว","คลื่นตามขวาง","คลื่นแม่เหล็กไฟฟ้า","คลื่นน้ำ"],a:0},
+{q:"สัตว์ใดจัดเป็นสัตว์ครึ่งบกครึ่งน้ำ (Amphibian)?",o:["กบ","เต่า","จระเข้","งู"],a:0},
+{q:"อวัยวะใดทำหน้าที่กรองของเสียออกจากเลือด?",o:["ไต","ตับ","ปอด","หัวใจ"],a:0},
+{q:"แรงที่ดึงวัตถุลงสู่พื้นโลกเรียกว่า?",o:["แรงโน้มถ่วง","แรงเสียดทาน","แรงลัพธ์","แรงปฏิกิริยา"],a:0},
+{q:"สสารประกอบด้วยอนุภาคเล็กที่สุดเรียกว่า?",o:["อะตอม","โมเลกุล","เซลล์","อิเล็กตรอน"],a:0},
+{q:"แสงสีขาวเมื่อผ่านปริซึมจะเกิดอะไร?",o:["กระจายเป็นสีรุ้ง","สะท้อนกลับ","ดูดกลืนทั้งหมด","หักเหเล็กน้อย"],a:0},
+{q:"สัตว์ใดเป็นสัตว์ไม่มีกระดูกสันหลัง?",o:["ปู","นก","งู","กบ"],a:0},
+{q:"ความดันอากาศวัดด้วยเครื่องมือชนิดใด?",o:["บาโรมิเตอร์","เทอร์โมมิเตอร์","แอมมิเตอร์","โวลต์มิเตอร์"],a:0},
+{q:"เลือดมีสีแดงเพราะสารใด?",o:["ฮีโมโกลบิน","คลอโรฟิลล์","เมลานิน","คาโรทีน"],a:0},
+{q:"ดาวใดที่ไม่ใช่ดาวเคราะห์ในระบบสุริยะ?",o:["ดวงอาทิตย์","โลก","ดาวพฤหัส","ดาวเสาร์"],a:0},
+{q:"สารใดเป็นกรด?",o:["น้ำมะนาว","น้ำเบกกิ้งโซดา","น้ำเกลือ","น้ำบริสุทธิ์"],a:0},
+{q:"ใบไม้มีสีเขียวเพราะสารใด?",o:["คลอโรฟิลล์","แอนโทไซยานิน","แคโรทีนอยด์","ฟลาโวนอยด์"],a:0},
+{q:"เส้นศูนย์สูตรแบ่งโลกออกเป็น?",o:["ซีกเหนือและซีกใต้","ซีกตะวันออกและตะวันตก","4 ส่วน","6 ส่วน"],a:0},
+{q:"กล้องจุลทรรศน์ใช้ดูสิ่งใด?",o:["วัตถุขนาดเล็กมาก","วัตถุไกล","ดาวในอวกาศ","ใต้น้ำ"],a:0},
+{q:"พลังงานทดแทนชนิดใดได้จากน้ำที่ไหล?",o:["พลังงานน้ำ","พลังงานลม","พลังงานแสงอาทิตย์","ชีวมวล"],a:0},
+{q:"นิวเคลียสของเซลล์เก็บข้อมูลใดไว้?",o:["ข้อมูลทางพันธุกรรม","พลังงาน","โปรตีน","น้ำ"],a:0},
+{q:"โลกมีรูปร่างเป็นอย่างไร?",o:["ทรงกลมแบน","ทรงกลมสมบูรณ์","ทรงสี่เหลี่ยม","ทรงรี"],a:0},
+{q:"พืชสร้างอาหารได้เองโดยกระบวนการใด?",o:["การสังเคราะห์แสง","การหายใจ","การย่อยอาหาร","การขับถ่าย"],a:0},
+{q:"ปอดทำหน้าที่หลักในการ?",o:["แลกเปลี่ยนแก๊ส","ย่อยอาหาร","กรองเลือด","สูบฉีดเลือด"],a:0},
+{q:"หิมะและน้ำแข็งเป็นน้ำในสถานะใด?",o:["ของแข็ง","ของเหลว","แก๊ส","พลาสมา"],a:0},
+{q:"สัตว์ชนิดใดไม่มีกระดูก?",o:["แมลงวัน","นก","กระต่าย","งู"],a:0}
+],
+2:[
+{q:"อวัยวะในร่างกายที่ทำหน้าที่ผลิตน้ำดีคือ?",o:["ตับ","ม้าม","ไต","ตับอ่อน"],a:0},
+{q:"ความเร็วของแสงในสุญญากาศมีค่าประมาณ?",o:["300,000 กม./วินาที","30,000 กม./วินาที","3,000,000 กม./วินาที","3,000 กม./วินาที"],a:0},
+{q:"ธาตุที่มีปริมาณมากที่สุดในบรรยากาศโลกคือ?",o:["ไนโตรเจน","ออกซิเจน","อาร์กอน","CO₂"],a:0},
+{q:"ดาวเคราะห์ที่ใหญ่ที่สุดในระบบสุริยะคือ?",o:["ดาวพฤหัสบดี","ดาวเสาร์","โลก","ดาวยูเรนัส"],a:0},
+{q:"สารกึ่งตัวนำที่ใช้ทำชิปคอมพิวเตอร์คือ?",o:["ซิลิกอน","อลูมิเนียม","ทองแดง","เหล็ก"],a:0},
+{q:"การแบ่งเซลล์แบบไมโทซิสสร้างเซลล์ลูกกี่เซลล์?",o:["2 เซลล์","4 เซลล์","8 เซลล์","1 เซลล์"],a:0},
+{q:"คลื่นแม่เหล็กไฟฟ้าชนิดใดมีความยาวคลื่นสั้นที่สุด?",o:["รังสีแกมมา","แสงที่มองเห็น","คลื่นวิทยุ","รังสีอินฟราเรด"],a:0},
+{q:"ออร์แกเนลล์ที่เรียกว่า 'โรงงานพลังงานของเซลล์' คือ?",o:["ไมโทคอนเดรีย","คลอโรพลาสต์","นิวเคลียส","ไรโบโซม"],a:0},
+{q:"กฎการอนุรักษ์พลังงานระบุว่า?",o:["พลังงานไม่สูญหายเพียงเปลี่ยนรูป","พลังงานสร้างขึ้นได้","พลังงานทำลายได้","พลังงานคงที่เสมอ"],a:0},
+{q:"เนื้อเยื่อประสาท (Nervous tissue) ประกอบด้วยเซลล์ใด?",o:["นิวรอน","เม็ดเลือดขาว","ไฟโบรบลาสต์","เซลล์กล้ามเนื้อ"],a:0},
+{q:"ระบบต่อมไร้ท่อหลั่งสารใดเพื่อควบคุมร่างกาย?",o:["ฮอร์โมน","เอนไซม์","แอนติบอดี","นิวโรทรานสมิตเตอร์"],a:0},
+{q:"ปฏิกิริยาเคมีใดดูดพลังงานเรียกว่า?",o:["Endothermic","Exothermic","Oxidation","Reduction"],a:0},
+{q:"ระบบสุริยะอยู่ในกาแล็กซีใด?",o:["ทางช้างเผือก","แอนดรอเมดา","Sombrero","Whirlpool"],a:0},
+{q:"ธาตุกัมมันตรังสีแผ่รังสีชนิดใดที่อันตรายที่สุด?",o:["รังสีแกมมา","รังสีแอลฟา","รังสีเบตา","รังสียูวี"],a:0},
+{q:"โฟโตซินเทซิสเกิดขึ้นในส่วนใดของพืช?",o:["ใบ","ราก","ลำต้น","ดอก"],a:0},
+{q:"สารประกอบของคาร์บอนและไฮโดรเจนเรียกว่า?",o:["ไฮโดรคาร์บอน","คาร์โบไฮเดรต","ออกไซด์","ไนเตรต"],a:0},
+{q:"แรงดึงดูดระหว่างมวลทั้งสองเรียกว่า?",o:["แรงโน้มถ่วงสากล","แรงแม่เหล็ก","แรงไฟฟ้า","แรงนิวเคลียร์"],a:0},
+{q:"การถ่ายทอดความร้อนผ่านของแข็งเรียกว่า?",o:["การนำความร้อน","การพาความร้อน","การแผ่รังสี","การระเหย"],a:0},
+{q:"ความดันเลือดปกติอยู่ที่ประมาณ?",o:["120/80 mmHg","80/120 mmHg","100/60 mmHg","140/90 mmHg"],a:0},
+{q:"ชั้นโอโซนป้องกันรังสีชนิดใดจากดวงอาทิตย์?",o:["รังสียูวี","รังสีแกมมา","รังสีเอกซ์","รังสีอินฟราเรด"],a:0},
+{q:"พืชดูดน้ำผ่านทางส่วนใด?",o:["ราก","ใบ","ลำต้น","ดอก"],a:0},
+{q:"ตัวนำไฟฟ้าที่ดีที่สุดคือ?",o:["เงิน","ทอง","ทองแดง","เหล็ก"],a:0},
+{q:"ดาวดึกเห็นในทิศใดในเวลาเช้าตรู่?",o:["ทิศตะวันออก","ทิศตะวันตก","ทิศเหนือ","ทิศใต้"],a:0},
+{q:"อุณหภูมิวัดด้วยหน่วยใดในระบบ SI?",o:["เคลวิน","เซลเซียส","ฟาเรนไฮต์","แรงคิน"],a:0},
+{q:"กรดอะมิโนเป็นสารที่ประกอบขึ้นเป็นอะไร?",o:["โปรตีน","ไขมัน","คาร์โบไฮเดรต","วิตามิน"],a:0},
+{q:"โมเลกุล O₃ คือ?",o:["โอโซน","ออกซิเจน","ออกไซด์","โอเมก้า"],a:0},
+{q:"ปลาหายใจด้วยอวัยวะใด?",o:["เหงือก","ปอด","ผิวหนัง","จมูก"],a:0},
+{q:"แผ่นเปลือกโลกเคลื่อนที่ทำให้เกิดอะไร?",o:["แผ่นดินไหวและภูเขาไฟ","พายุ","น้ำท่วม","สึนามิเพียงอย่างเดียว"],a:0},
+{q:"ระบบภูมิคุ้มกันสร้างโปรตีนใดต่อสู้เชื้อโรค?",o:["แอนติบอดี","ฮีโมโกลบิน","อินซูลิน","เอนไซม์"],a:0},
+{q:"ตาประกอบ (Compound eye) พบในสัตว์ใด?",o:["แมลง","นก","ปลา","กบ"],a:0},
+{q:"กระบวนการที่น้ำกลายเป็นไอน้ำเรียกว่า?",o:["การระเหย","การควบแน่น","การหลอมเหลว","การแข็งตัว"],a:0},
+{q:"ดาวที่มีวงแหวนสวยงามที่สุดคือ?",o:["ดาวเสาร์","ดาวพฤหัส","ดาวยูเรนัส","ดาวเนปจูน"],a:0},
+{q:"กระบวนการหายใจระดับเซลล์เกิดที่ใด?",o:["ไมโทคอนเดรีย","คลอโรพลาสต์","นิวเคลียส","เยื่อหุ้มเซลล์"],a:0},
+{q:"คาร์บอนไดออกไซด์ละลายในน้ำได้กรดใด?",o:["กรดคาร์บอนิก","กรดซัลฟิวริก","กรดไฮโดรคลอริก","กรดไนตริก"],a:0},
+{q:"กระแสไฟฟ้าสลับ (AC) มีความถี่เท่าใดในประเทศไทย?",o:["50 Hz","60 Hz","100 Hz","25 Hz"],a:0},
+{q:"เนื้อเยื่อใดทำหน้าที่ลำเลียงน้ำในพืช?",o:["ไซเลม","โฟลเอม","เมริสเตม","เอพิเดอร์มิส"],a:0},
+{q:"มวลและพลังงานเกี่ยวข้องกันตามสมการใด?",o:["E=mc²","F=ma","PV=nRT","E=hf"],a:0},
+{q:"เลนส์ตาของมนุษย์ทำหน้าที่ใด?",o:["โฟกัสแสงที่จอประสาทตา","รับสี","วัดระยะ","ปรับขนาดรูม่านตา"],a:0},
+{q:"ดาวนิวตรอนเกิดจากการระเบิดของ?",o:["ดาวมวลมาก","ดาวแคระขาว","ดาวหาง","ดาวเคราะห์น้อย"],a:0},
+{q:"ระบบพาราซิมพาเทติกทำให้เกิดผลใด?",o:["หัวใจเต้นช้าลง","หัวใจเต้นเร็วขึ้น","ขยายรูม่านตา","เพิ่มน้ำตาลในเลือด"],a:0},
+{q:"ฟอสซิลถูกพบมากในหินประเภทใด?",o:["หินตะกอน","หินอัคนี","หินแปร","หินพัมมิซ"],a:0},
+{q:"สารชีวโมเลกุลใดให้พลังงานมากที่สุดต่อกรัม?",o:["ไขมัน","คาร์โบไฮเดรต","โปรตีน","วิตามิน"],a:0},
+{q:"การถ่ายทอดพันธุกรรมใช้หน่วยใด?",o:["ยีน","เซลล์","โครโมโซม","นิวเคลียส"],a:0},
+{q:"แรงเสียดทานขึ้นอยู่กับสิ่งใดเป็นหลัก?",o:["แรงกดและพื้นผิว","มวลและความเร็ว","ขนาดและสี","เวลาและระยะทาง"],a:0},
+{q:"อาหารใดเป็นแหล่งแคลเซียมที่ดี?",o:["นม","เนื้อไก่","ข้าว","น้ำมัน"],a:0},
+{q:"การโคลนนิ่งสิ่งมีชีวิตใช้วิธีใด?",o:["ถ่ายโอน DNA","ผสมพันธุ์ตามธรรมชาติ","ปฏิสนธินอกร่างกาย","สกัดโปรตีน"],a:0},
+{q:"แสงเดินทางได้เร็วที่สุดในตัวกลางใด?",o:["สุญญากาศ","น้ำ","แก้ว","เพชร"],a:0},
+{q:"ต่อมใดผลิตฮอร์โมนอินซูลิน?",o:["ตับอ่อน","ต่อมใต้สมอง","ต่อมไทรอยด์","ต่อมหมวกไต"],a:0},
+{q:"เขตภูเขาไฟรอบมหาสมุทรแปซิฟิกเรียกว่า?",o:["วงแหวนแห่งไฟ","สันเขากลางมหาสมุทร","ร่องลึกมาเรียนา","แนวหิมาลัย"],a:0},
+{q:"การแบ่งเซลล์แบบไมโอซิสสร้างเซลล์กี่เซลล์?",o:["4 เซลล์","2 เซลล์","8 เซลล์","1 เซลล์"],a:0},
+{q:"เส้นไอโซบาร์ในแผนที่อากาศแสดงสิ่งใด?",o:["ความดันอากาศเท่ากัน","อุณหภูมิเท่ากัน","ความชื้นเท่ากัน","ความสูงเท่ากัน"],a:0},
+{q:"สารใดทำให้กระดาษลิตมัสเปลี่ยนจากแดงเป็นน้ำเงิน?",o:["เบส","กรด","เกลือ","น้ำ"],a:0},
+{q:"ระบบนิเวศน้ำจืดมีสิ่งมีชีวิตผู้ผลิตหลักคือ?",o:["สาหร่าย","ปลา","กบ","นก"],a:0},
+{q:"ความต้านทานไฟฟ้าวัดด้วยหน่วยใด?",o:["โอห์ม","แอมแปร์","โวลต์","วัตต์"],a:0},
+{q:"ดาวเคราะห์แคระดวงใดที่มีชื่อเสียงที่สุด?",o:["พลูโต","เซเรส","อีริส","มาคีมาคี"],a:0},
+{q:"การหมักแอลกอฮอล์ใช้จุลินทรีย์ชนิดใด?",o:["ยีสต์","แบคทีเรีย","ราก","ไวรัส"],a:0},
+{q:"อาการขาดวิตามิน C ทำให้เกิดโรคใด?",o:["ลักปิดลักเปิด","คอพอก","กระดูกอ่อน","โลหิตจาง"],a:0},
+{q:"แรงดันในของเหลวขึ้นอยู่กับสิ่งใด?",o:["ความลึกและความหนาแน่น","ปริมาตรและมวล","อุณหภูมิและสี","ความเร็วและแรง"],a:0},
+{q:"พันธะโควาเลนต์เกิดจากการใช้ร่วมกันของ?",o:["อิเล็กตรอน","โปรตอน","นิวตรอน","นิวเคลียส"],a:0}
+],
+3:[
+{q:"ค่า pH ของสารกลาง (Neutral) คือเท่าใด?",o:["7","0","14","5"],a:0},
+{q:"แรงโน้มถ่วงของโลกมีค่าประมาณ?",o:["9.8 m/s²","10.8 m/s²","8.8 m/s²","11.8 m/s²"],a:0},
+{q:"ธาตุที่มีเลขอะตอม 1 คือ?",o:["ไฮโดรเจน","ฮีเลียม","ลิเทียม","คาร์บอน"],a:0},
+{q:"กฎการเคลื่อนที่ข้อที่ 1 ของนิวตันเกี่ยวกับ?",o:["ความเฉื่อย","แรงและความเร่ง","การกระทำและปฏิกิริยา","แรงโน้มถ่วง"],a:0},
+{q:"สารพันธุกรรมของสิ่งมีชีวิตคือ?",o:["DNA","RNA","โปรตีน","ลิพิด"],a:0},
+{q:"การทดลองของ Mendel เกี่ยวกับการถ่ายทอดพันธุกรรมใช้พืชชนิดใด?",o:["ถั่วลันเตา","ข้าวโพด","ดอกบ๊วย","มะเขือเทศ"],a:0},
+{q:"กฎของ Ohm คือความสัมพันธ์ระหว่างอะไร?",o:["V=IR","F=ma","E=mc²","PV=nRT"],a:0},
+{q:"ความเร่งของวัตถุที่ตกอิสระในสุญญากาศมีค่าประมาณ?",o:["9.8 m/s²","10 m/s²","8 m/s²","11 m/s²"],a:0},
+{q:"หมู่ธาตุในตารางธาตุหมายถึงอะไร?",o:["คอลัมน์แนวตั้ง","แถวแนวนอน","สีในตาราง","มวลอะตอม"],a:0},
+{q:"ปฏิกิริยาสะเทิน (Neutralization) ได้ผลิตภัณฑ์คือ?",o:["เกลือและน้ำ","กรดและน้ำ","เบสและน้ำ","แก๊สและน้ำ"],a:0},
+{q:"สมการ F=ma คือกฎข้อที่เท่าไหร่ของนิวตัน?",o:["ข้อที่ 2","ข้อที่ 1","ข้อที่ 3","ข้อที่ 4"],a:0},
+{q:"รังสีชนิดใดใช้ในการถ่ายภาพกระดูก?",o:["รังสีเอกซ์","รังสียูวี","รังสีอินฟราเรด","รังสีแกมมา"],a:0},
+{q:"ฮอร์โมนที่ควบคุมการเจริญเติบโตผลิตที่ใด?",o:["ต่อมใต้สมอง","ต่อมไทรอยด์","ต่อมหมวกไต","ตับอ่อน"],a:0},
+{q:"ทฤษฎีเซลล์ (Cell Theory) ระบุว่า?",o:["สิ่งมีชีวิตประกอบด้วยเซลล์","เซลล์ไม่มีชีวิต","เซลล์ไม่สามารถแบ่งตัวได้","เซลล์ไม่มีนิวเคลียส"],a:0},
+{q:"คลื่นเสียงเดินทางได้เร็วที่สุดในตัวกลางใด?",o:["ของแข็ง","ของเหลว","แก๊ส","สุญญากาศ"],a:0},
+{q:"ธาตุหมู่ VIIA เรียกว่าอะไร?",o:["ฮาโลเจน","แก๊สมีตระกูล","โลหะแอลคาไล","โลหะทรานสิชัน"],a:0},
+{q:"ดาวแคระขาว (White Dwarf) คืออะไร?",o:["ซากดาวฤกษ์ขนาดเล็ก","ดาวเคราะห์น้อย","ดาวหาง","ดาวนิวตรอน"],a:0},
+{q:"การหายใจแบบใช้ออกซิเจน (Aerobic) สร้างพลังงานได้กี่ ATP?",o:["36-38 ATP","2 ATP","4 ATP","18 ATP"],a:0},
+{q:"กรณฑ์ที่ 2 ของ 144 เท่ากับเท่าใด (เลือกคำตอบที่ถูก)?",o:["12","14","11","13"],a:0},
+{q:"ปฏิกิริยาออกซิเดชันหมายถึง?",o:["การเสียอิเล็กตรอน","การรับอิเล็กตรอน","การรับโปรตอน","การเสียโปรตอน"],a:0},
+{q:"เส้นแรงแม่เหล็กออกจากขั้วใดของแม่เหล็ก?",o:["ขั้วเหนือ","ขั้วใต้","ทั้งสองขั้ว","กลางแท่งแม่เหล็ก"],a:0},
+{q:"ลูกตาของมนุษย์มีรูปร่างเป็นทรงใด?",o:["ทรงกลม","ทรงรี","ทรงกระบอก","ทรงสี่เหลี่ยม"],a:0},
+{q:"ต่อมไทรอยด์ผลิตฮอร์โมนใดที่ควบคุมการเผาผลาญ?",o:["ไทรอกซิน","อินซูลิน","เอสโตรเจน","คอร์ติซอล"],a:0},
+{q:"วงจรคาร์บอนมีความสำคัญต่อสิ่งแวดล้อมอย่างไร?",o:["หมุนเวียนคาร์บอนในระบบนิเวศ","ลดออกซิเจน","เพิ่มไนโตรเจน","ลดความชื้น"],a:0},
+{q:"ความดันแก๊สขึ้นอยู่กับสิ่งใดตามกฎของบอยล์?",o:["ปริมาตร (อุณหภูมิคงที่)","อุณหภูมิ","มวล","สี"],a:0},
+{q:"เอนไซม์ทำงานได้ดีที่สุดในช่วง pH และอุณหภูมิใด?",o:["pH และอุณหภูมิที่เหมาะสมสำหรับเอนไซม์แต่ละชนิด","pH 7 อุณหภูมิ 0°C","pH 14 อุณหภูมิ 100°C","pH 0 อุณหภูมิ 50°C"],a:0},
+{q:"ธาตุโซเดียม (Na) มีเลขอะตอมเท่าใด?",o:["11","12","10","13"],a:0},
+{q:"ทฤษฎีวิวัฒนาการถูกเสนอโดยใคร?",o:["Charles Darwin","Isaac Newton","Albert Einstein","Louis Pasteur"],a:0},
+{q:"การสืบพันธุ์แบบไม่อาศัยเพศ (Asexual) ข้อใดถูก?",o:["ได้สิ่งมีชีวิตที่เหมือนต้นแบบ","ได้ความหลากหลายทางพันธุกรรมสูง","ต้องมีสองเพศ","ผลลัพธ์แตกต่างจากพ่อแม่เสมอ"],a:0},
+{q:"ดาวฤกษ์มีสีต่างกันเพราะ?",o:["อุณหภูมิบนผิวต่างกัน","ขนาดต่างกัน","ระยะห่างจากโลกต่างกัน","ความสว่างต่างกัน"],a:0},
+{q:"กฎข้อที่ 3 ของนิวตันเกี่ยวข้องกับ?",o:["แรงกิริยาและแรงปฏิกิริยา","ความเฉื่อย","F=ma","แรงโน้มถ่วง"],a:0},
+{q:"สิ่งมีชีวิตที่ทำหน้าที่ย่อยสลายซากสิ่งมีชีวิตเรียกว่า?",o:["Decomposer","Producer","Consumer","Predator"],a:0},
+{q:"ปฏิกิริยาโฟโตอิเล็กตริกแสดงว่าแสงมีสมบัติเป็น?",o:["อนุภาค","คลื่น","ทั้งคลื่นและอนุภาค","ไม่ใช่ทั้งคู่"],a:0},
+{q:"สปีชีส์หมายถึง?",o:["กลุ่มสิ่งมีชีวิตที่ผสมพันธุ์กันได้","อาณาจักรสิ่งมีชีวิต","ชั้น (Class)","ไฟลัม (Phylum)"],a:0},
+{q:"ปรอท (Mercury) ที่ใช้ในเทอร์โมมิเตอร์มีสถานะใดที่อุณหภูมิห้อง?",o:["ของเหลว","ของแข็ง","แก๊ส","พลาสมา"],a:0},
+{q:"คลื่นแสงเป็นคลื่นชนิดใด?",o:["คลื่นตามขวาง","คลื่นตามยาว","ทั้งสองชนิด","ไม่ใช่คลื่น"],a:0},
+{q:"การสืบพันธุ์ของพืชดอกเริ่มต้นที่?",o:["การผสมเกสร","การงอกเมล็ด","การแตกหน่อ","การสร้างสปอร์"],a:0},
+{q:"ธาตุกัมมันตภาพรังสีมีนิวเคลียสที่?",o:["ไม่เสถียรและสลายตัวได้","เสถียรมาก","ไม่มีโปรตอน","ไม่มีนิวตรอน"],a:0},
+{q:"เซลล์ประสาทส่งสัญญาณด้วยการเปลี่ยนแปลง?",o:["ศักย์ไฟฟ้า","อุณหภูมิ","ความดัน","สี"],a:0},
+{q:"ไอโซโทปของธาตุเดียวกันมีจำนวนอะไรเท่ากัน?",o:["โปรตอน","นิวตรอน","มวลอะตอม","จำนวนอิเล็กตรอนต่างกัน"],a:0},
+{q:"สมดุลเคมี (Chemical Equilibrium) หมายถึง?",o:["อัตราการเกิดปฏิกิริยาไปข้างหน้า=ย้อนกลับ","ปฏิกิริยาหยุดสมบูรณ์","เฉพาะสารตั้งต้น","เฉพาะผลิตภัณฑ์"],a:0},
+{q:"การทดสอบแป้งใช้สารชนิดใด?",o:["ไอโอดีน","เบเนดิกต์","บิวเรต","เงิน-แอมโมเนีย"],a:0},
+{q:"แสงสีแดงมีความยาวคลื่นเป็นอย่างไรเมื่อเทียบกับสีม่วง?",o:["ยาวกว่า","สั้นกว่า","เท่ากัน","ขึ้นอยู่กับตัวกลาง"],a:0},
+{q:"ระบบนิเวศ (Ecosystem) ประกอบด้วย?",o:["สิ่งมีชีวิตและสิ่งไม่มีชีวิต","เฉพาะสิ่งมีชีวิต","เฉพาะสิ่งไม่มีชีวิต","เฉพาะพืช"],a:0},
+{q:"ออร์แกเนลล์ใดสังเคราะห์โปรตีน?",o:["ไรโบโซม","นิวเคลียส","ไมโทคอนเดรีย","กอลจิบอดี"],a:0},
+{q:"กฎเกณฑ์การจำแนกสิ่งมีชีวิตระบบ 5 อาณาจักร แบ่งเป็นอะไรบ้าง?",o:["มอเนอรา โปรทิสตา ฟังไจ พืช สัตว์","แบคทีเรีย ไวรัส พืช สัตว์ เห็ด","กรด เบส เกลือ น้ำ อากาศ","พลังงาน ดิน น้ำ ลม ไฟ"],a:0},
+{q:"การเปลี่ยนแปลงทางกายภาพ (Physical Change) ข้อใดถูก?",o:["น้ำแข็งละลาย","เหล็กเป็นสนิม","กระดาษไหม้","ไข่สุก"],a:0},
+{q:"สเปกตรัมแม่เหล็กไฟฟ้าเรียงจากความถี่น้อยไปมาก?",o:["คลื่นวิทยุ>ไมโครเวฟ>อินฟราเรด>แสงที่มองเห็น>UV>X-ray>แกมมา","แกมมา>X-ray>UV>แสงที่มองเห็น>อินฟราเรด>ไมโครเวฟ>วิทยุ","แสง>UV>วิทยุ>แกมมา>X-ray","UV>แสง>วิทยุ>แกมมา>X-ray"],a:0},
+{q:"มวลโมลของน้ำ (H₂O) มีค่าเท่าใด?",o:["18 g/mol","16 g/mol","20 g/mol","22 g/mol"],a:0},
+{q:"การทดลองใดแสดงว่า DNA เป็นสารพันธุกรรม?",o:["การทดลองของ Avery","การทดลองของ Pasteur","การทดลองของ Mendel","การทดลองของ Darwin"],a:0},
+{q:"ดาวที่มีมวลมากกว่าดวงอาทิตย์มากๆ เมื่อสิ้นอายุจะเป็นอะไร?",o:["หลุมดำ","ดาวแคระขาว","ดาวนิวตรอน","เนบิวลา"],a:0},
+{q:"สมบัติของน้ำที่ทำให้มีจุดเดือดสูงกว่าปกติเกิดจาก?",o:["พันธะไฮโดรเจน","พันธะโควาเลนต์","พันธะไอออนิก","แรงแวนเดอร์วาลส์"],a:0},
+{q:"ความยาวคลื่นของแสงที่มองเห็นได้ (Visible Light) อยู่ในช่วงใด?",o:["400-700 nm","100-400 nm","700-1000 nm","10-100 nm"],a:0},
+{q:"กระบวนการไนโตรเจนฟิกเซชัน (N-fixation) เปลี่ยน N₂ เป็นอะไร?",o:["NH₃","NO₂","N₂O","HNO₃"],a:0}
+],
+4:[
+{q:"ตารางธาตุจัดเรียงธาตุตามสิ่งใด?",o:["เลขอะตอม","มวลอะตอม","สถานะของสาร","ความหนาแน่น"],a:0},
+{q:"ปฏิกิริยาดูดความร้อน (Endothermic) มีค่า ΔH อย่างไร?",o:["เป็นบวก","เป็นลบ","เป็นศูนย์","ไม่มีค่า ΔH"],a:0},
+{q:"กรดอะมิโนเป็นหน่วยย่อยของ?",o:["โปรตีน","คาร์โบไฮเดรต","ไขมัน","วิตามิน"],a:0},
+{q:"ฮอร์โมนใดควบคุมระดับน้ำตาลในเลือด?",o:["อินซูลิน","อะดรีนาลิน","เทสโทสเทอโรน","เมลาโทนิน"],a:0},
+{q:"กาแล็กซีทางช้างเผือกมีรูปร่างอย่างไร?",o:["กาแล็กซีก้นหอย","กาแล็กซีรูปรี","กาแล็กซีไม่สม่ำเสมอ","เนบิวลาดาวเคราะห์"],a:0},
+{q:"ระดับออร์บิทัล d มีออร์บิทัลกี่ออร์บิทัล?",o:["5","3","7","1"],a:0},
+{q:"สมการ Nernst Equation ใช้คำนวณ?",o:["ศักย์ไฟฟ้าของเซลล์กัลวานิก","ค่า pH","ความดันออสโมติก","ความเข้มข้น"],a:0},
+{q:"การทดลองของ Rutherford ค้นพบ?",o:["นิวเคลียสของอะตอม","อิเล็กตรอน","นิวตรอน","โปรตอน"],a:0},
+{q:"สมการไดอารี่สมมาตร (Diels-Alder Reaction) เป็นปฏิกิริยาประเภทใด?",o:["Cycloaddition","Substitution","Elimination","Oxidation"],a:0},
+{q:"ทฤษฎีควอนตัม (Quantum Theory) เกี่ยวกับ?",o:["พฤติกรรมของอนุภาคขนาดเล็ก","แรงโน้มถ่วง","ความสัมพันธ์มวล-พลังงาน","คลื่นแม่เหล็กไฟฟ้า"],a:0},
+{q:"กระบวนการ PCR (Polymerase Chain Reaction) ใช้ทำอะไร?",o:["ขยาย DNA","ตัด DNA","เชื่อม DNA","ย่อย DNA"],a:0},
+{q:"แผ่นเปลือกโลก (Tectonic Plates) เคลื่อนที่บนชั้นใด?",o:["เนื้อโลก (Mantle)","แกนโลก (Core)","เปลือกโลก (Crust)","ชั้นบรรยากาศ"],a:0},
+{q:"อนุภาคใดมีมวลมากที่สุด?",o:["โปรตอน","อิเล็กตรอน","โฟตอน","นิวทริโน"],a:0},
+{q:"การทดลองของ Miller-Urey แสดงให้เห็นว่า?",o:["สารอินทรีย์เกิดได้จากอนินทรีย์","DNA คือสารพันธุกรรม","เซลล์มีนิวเคลียส","แสงสังเคราะห์ได้"],a:0},
+{q:"ฟิสิกส์ควอนตัมเชิงสัมพัทธภาพรวมทฤษฎีอะไรบ้าง?",o:["ควอนตัมและสัมพัทธภาพพิเศษ","แม่เหล็กและไฟฟ้า","กลศาสตร์และอุณหพลศาสตร์","คลื่นและอนุภาค"],a:0},
+{q:"หลักความไม่แน่นอนของไฮเซนเบิร์กกล่าวว่า?",o:["ไม่สามารถวัดตำแหน่งและโมเมนตัมพร้อมกันได้แม่นยำ","แสงเป็นทั้งคลื่นและอนุภาค","พลังงานมีค่าต่อเนื่อง","มวลเท่ากับพลังงาน"],a:0},
+{q:"โครโมโซมของมนุษย์มีกี่คู่?",o:["23 คู่","22 คู่","24 คู่","46 คู่ (ตอบ 46 แท่ง)"],a:0},
+{q:"สมการสโครดิงเงอร์ใช้อธิบายอะไร?",o:["ฟังก์ชันคลื่นของอนุภาค","แรงโน้มถ่วง","การแผ่รังสี","สนามแม่เหล็กไฟฟ้า"],a:0},
+{q:"เทคนิค CRISPR-Cas9 ใช้ทำอะไร?",o:["ตัดต่อ DNA","โคลนสัตว์","ผลิตวัคซีน","ตรวจ DNA"],a:0},
+{q:"ในเทอร์โมไดนามิกส์ Entropy หมายถึง?",o:["ความไม่เป็นระเบียบของระบบ","พลังงานของระบบ","ความดันของระบบ","อุณหภูมิของระบบ"],a:0},
+{q:"พันธะโลหะ (Metallic Bond) เกิดจาก?",o:["อิเล็กตรอนอิสระในโครงผลึก","การใช้อิเล็กตรอนร่วมกัน","การถ่ายเทอิเล็กตรอน","แรงดึงดูดระหว่างโมเลกุล"],a:0},
+{q:"ฮาร์โมนิกโอเวอร์โทน (Harmonic Overtone) เกี่ยวกับ?",o:["คลื่นเสียงในท่อหรือสาย","คลื่นแสง","คลื่นน้ำ","คลื่นแผ่นดินไหว"],a:0},
+{q:"กฎของ Faraday เกี่ยวกับ?",o:["การเหนี่ยวนำแม่เหล็กไฟฟ้า","แรงระหว่างประจุ","ความต้านทาน","กฎการอนุรักษ์พลังงาน"],a:0},
+{q:"ตัวรับรสที่ลิ้นของมนุษย์รับรู้รสชาติกี่รสพื้นฐาน?",o:["5 รส","4 รส","3 รส","6 รส"],a:0},
+{q:"เทคโนโลยีนาโน (Nanotechnology) ทำงานในระดับ?",o:["1-100 นาโนเมตร","1-100 ไมโครเมตร","1-100 มิลลิเมตร","1-100 เมตร"],a:0},
+{q:"Stem Cell มีความสามารถพิเศษอย่างไร?",o:["แบ่งตัวเป็นเซลล์ชนิดต่างๆ ได้","เพิ่มขนาดได้ไม่จำกัด","ไม่ตายเลย","สร้าง DNA ใหม่ได้"],a:0},
+{q:"แรงนิวเคลียร์อย่างแข็ง (Strong Nuclear Force) ยึดสิ่งใด?",o:["โปรตอนและนิวตรอนในนิวเคลียส","อิเล็กตรอนในออร์บิทัล","โมเลกุลเข้าด้วยกัน","แผ่นเปลือกโลก"],a:0},
+{q:"Doppler Effect เกิดขึ้นเมื่อ?",o:["แหล่งกำเนิดเสียงหรือผู้สังเกตเคลื่อนที่","อุณหภูมิเปลี่ยน","ความดันเปลี่ยน","สนามแม่เหล็กเปลี่ยน"],a:0},
+{q:"หลักการไม่แน่นอนนำไปสู่แนวคิดใด?",o:["อะตอมไม่มีวงโคจรที่แน่นอน","อะตอมเป็นทรงกลมแข็ง","อิเล็กตรอนอยู่นิ่ง","แสงไม่เบี่ยงเบน"],a:0},
+{q:"DNA Double Helix ถูกค้นพบโดย?",o:["Watson และ Crick","Mendel","Darwin","Pasteur"],a:0},
+{q:"สมดุลออสโมติก (Osmotic Equilibrium) ขึ้นกับ?",o:["ความเข้มข้นของสารละลาย","อุณหภูมิ","ความดัน","สี"],a:0},
+{q:"กฎของ Maxwell เกี่ยวกับ?",o:["สมการสนามแม่เหล็กไฟฟ้า","กลศาสตร์ควอนตัม","ทฤษฎีสัมพัทธภาพ","เทอร์โมไดนามิกส์"],a:0},
+{q:"กระบวนการ Apoptosis คือ?",o:["การตายของเซลล์ที่ตั้งโปรแกรมไว้","การแบ่งตัวของเซลล์","การซ่อมแซม DNA","การส่งสัญญาณประสาท"],a:0},
+{q:"อนุภาค Higgs Boson เกี่ยวข้องกับ?",o:["กลไกการให้มวลแก่อนุภาค","แรงโน้มถ่วง","แรงแม่เหล็ก","คลื่นแม่เหล็กไฟฟ้า"],a:0},
+{q:"แผ่น DNA ใน Gel Electrophoresis แยกตามอะไร?",o:["ขนาดของ DNA","สีของ DNA","ความดัน","อุณหภูมิ"],a:0},
+{q:"ทฤษฎีบิ๊กแบง (Big Bang Theory) กล่าวว่า?",o:["จักรวาลกำเนิดจากการระเบิดครั้งใหญ่","โลกเป็นศูนย์กลางจักรวาล","จักรวาลหยุดนิ่ง","ดาวฤกษ์เกิดก่อนจักรวาล"],a:0},
+{q:"ปรากฏการณ์ซุปเปอร์โนวา (Supernova) คือ?",o:["การระเบิดของดาวฤกษ์มวลมาก","การชนกันของดาวเคราะห์","การกำเนิดดาว","การดูดกลืนของหลุมดำ"],a:0},
+{q:"กฎเลอ ชาเตอลิเย (Le Chatelier's Principle) กล่าวว่า?",o:["ระบบจะต้านการเปลี่ยนแปลงที่เกิดขึ้น","ปฏิกิริยาดำเนินไปข้างหน้าเสมอ","สมดุลไม่สามารถเปลี่ยนได้","ความเข้มข้นคงที่เสมอ"],a:0},
+{q:"ในการหาตำแหน่งของอิเล็กตรอน เราใช้แนวคิดใด?",o:["ออร์บิทัล (Orbital)","วงโคจร (Orbit)","เส้นทาง (Trajectory)","ตำแหน่งแน่นอน"],a:0},
+{q:"Dark Matter (สสารมืด) คือ?",o:["สสารที่ตรวจพบด้วยแรงโน้มถ่วงแต่ไม่แผ่แสง","สสารสีดำ","สสารในหลุมดำ","แก๊สในอวกาศ"],a:0},
+{q:"กระบวนการ Oxidative Phosphorylation เกิดที่ใด?",o:["เยื่อหุ้มชั้นในของไมโทคอนเดรีย","เยื่อหุ้มเซลล์","นิวเคลียส","คลอโรพลาสต์"],a:0},
+{q:"คลื่นความโน้มถ่วง (Gravitational Wave) ถูกตรวจพบครั้งแรกโดยองค์กรใด?",o:["LIGO","NASA","ESA","CERN"],a:0},
+{q:"พันธะ Pi (π bond) เกิดจากการซ้อนทับกันของออร์บิทัลชนิดใด?",o:["p-p ด้านข้าง","s-s","p-s","d-d"],a:0},
+{q:"ไวรัสต่างจากแบคทีเรียในด้านใด?",o:["ไวรัสไม่มีเซลล์","ไวรัสมีนิวเคลียส","ไวรัสสามารถสืบพันธุ์ได้เอง","ไวรัสมีริโบโซม"],a:0},
+{q:"สมการความสัมพัทธ์พิเศษ E=mc² หมายความว่า?",o:["มวลและพลังงานแปลงกันได้","ความเร็วแสงคงที่","อนุภาคมีมวลที่แน่นอน","เวลาเดินเร็วขึ้น"],a:0},
+{q:"กระบวนการ Krebs Cycle เกิดใน?",o:["เมทริกซ์ของไมโทคอนเดรีย","ไซโทพลาซึม","นิวเคลียส","คลอโรพลาสต์"],a:0},
+{q:"ทฤษฎีออร์บิทัลโมเลกุล (MO Theory) อธิบาย?",o:["การสร้างพันธะเคมีในโมเลกุล","การแผ่รังสีของอะตอม","กฎก๊าซ","ความหนาแน่น"],a:0},
+{q:"Plasmid ในแบคทีเรียคือ?",o:["DNA วงกลมขนาดเล็กนอกโครโมโซม","โปรตีนโครงสร้าง","เอนไซม์ตัด DNA","เยื่อหุ้มเซลล์"],a:0},
+{q:"การทดลอง Double Slit Experiment แสดงว่า?",o:["อนุภาคมีสมบัติเป็นคลื่น","แสงเป็นอนุภาคเท่านั้น","เสียงเร็วกว่าแสง","อิเล็กตรอนไม่มีมวล"],a:0},
+{q:"ปรากฏการณ์ทันเนลลิง (Quantum Tunneling) คือ?",o:["อนุภาคผ่านกำแพงพลังงานได้แม้พลังงานต่ำกว่า","อนุภาคหยุดนิ่งทันที","แสงหักเห","เสียงสะท้อน"],a:0},
+{q:"ฟังก์ชัน Wavefunction (ψ) ของ Schrödinger แทนอะไร?",o:["ความน่าจะเป็นในการพบอนุภาค","ตำแหน่งแน่นอน","ความเร็ว","มวลอนุภาค"],a:0}
+]
+},
+math:{
+1:[
+{q:"15 + 27 = ?",o:["42","41","43","40"],a:0},
+{q:"8 × 7 = ?",o:["56","54","58","52"],a:0},
+{q:"√64 = ?",o:["8","6","7","9"],a:0},
+{q:"มุมทั้งหมดภายในสามเหลี่ยมรวมกันเท่ากับ?",o:["180°","360°","90°","270°"],a:0},
+{q:"2³ = ?",o:["8","6","9","12"],a:0},
+{q:"100 ÷ 4 = ?",o:["25","20","30","24"],a:0},
+{q:"เศษส่วน 3/4 คิดเป็นกี่เปอร์เซ็นต์?",o:["75%","50%","25%","80%"],a:0},
+{q:"จำนวนคี่ระหว่าง 1 ถึง 10 มีกี่จำนวน?",o:["5 จำนวน","4 จำนวน","6 จำนวน","3 จำนวน"],a:0},
+{q:"ค่าของ x ถ้า x + 5 = 12?",o:["7","5","6","8"],a:0},
+{q:"พื้นที่สี่เหลี่ยมผืนผ้ากว้าง 4 ยาว 6 เท่ากับ?",o:["24 ตร.หน่วย","10 ตร.หน่วย","20 ตร.หน่วย","12 ตร.หน่วย"],a:0},
+{q:"12² = ?",o:["144","124","134","114"],a:0},
+{q:"ห.ร.ม. ของ 12 และ 18 คือ?",o:["6","4","3","9"],a:0},
+{q:"ค.ม.น. ของ 4 และ 6 คือ?",o:["12","8","24","6"],a:0},
+{q:"3/5 + 1/5 = ?",o:["4/5","2/5","4/10","1/2"],a:0},
+{q:"45° เป็นมุมชนิดใด?",o:["มุมแหลม","มุมป้าน","มุมฉาก","มุมกลับ"],a:0},
+{q:"เส้นรอบรูปสี่เหลี่ยมจัตุรัสด้าน 5 ซม. เท่ากับ?",o:["20 ซม.","25 ซม.","15 ซม.","10 ซม."],a:0},
+{q:"0.5 + 0.25 = ?",o:["0.75","0.70","0.80","0.65"],a:0},
+{q:"ถ้า a = 3 และ b = 4 แล้ว a² + b² = ?",o:["25","12","7","14"],a:0},
+{q:"จำนวนเฉพาะระหว่าง 1-20 มีกี่จำนวน?",o:["8","6","7","9"],a:0},
+{q:"สามเหลี่ยมด้านเท่ามีมุมทุกมุมเท่ากับ?",o:["60°","45°","90°","30°"],a:0},
+{q:"(-5) + 8 = ?",o:["3","-3","13","-13"],a:0},
+{q:"ผลคูณของ 11 × 11 = ?",o:["121","111","131","101"],a:0},
+{q:"ครึ่งหนึ่งของ 150 คือ?",o:["75","50","100","80"],a:0},
+{q:"3/4 ÷ 1/2 = ?",o:["3/2","3/8","6/4","1/2"],a:0},
+{q:"จำนวนในข้อใดเป็นจำนวนเต็มลบ?",o:["-7","0","7","7.5"],a:0},
+{q:"มุมใดเป็นมุมตรง?",o:["180°","90°","360°","270°"],a:0},
+{q:"500 กรัม เท่ากับกี่กิโลกรัม?",o:["0.5 กก.","5 กก.","50 กก.","0.05 กก."],a:0},
+{q:"ค่าของ 5! = ?",o:["120","60","24","720"],a:0},
+{q:"เส้นผ่านศูนย์กลางของวงกลมรัศมี 6 ซม. คือ?",o:["12 ซม.","6 ซม.","9 ซม.","3 ซม."],a:0},
+{q:"สัดส่วน 2:3 = 4:?",o:["6","5","8","3"],a:0},
+{q:"10% ของ 200 คือ?",o:["20","10","30","40"],a:0},
+{q:"ผลลัพธ์ของ 7 × 8 - 6 × 4 = ?",o:["32","28","40","56"],a:0},
+{q:"จำนวนในข้อใดหารด้วย 3 ลงตัว?",o:["39","37","41","43"],a:0},
+{q:"2.5 × 4 = ?",o:["10","8","12","9"],a:0},
+{q:"น้ำหนักของกล่อง 3 ใบๆ ละ 2.5 กก. รวมกัน?",o:["7.5 กก.","6 กก.","8 กก.","5 กก."],a:0},
+{q:"ระยะทางจากจุด A ถึง B = 5 กม. B ถึง C = 8 กม. A ถึง C = ?",o:["13 กม.","3 กม.","40 กม.","10 กม."],a:0},
+{q:"แผนภาพต้น-ใบ (Stem-and-Leaf) ใช้ทำอะไร?",o:["แสดงการกระจายข้อมูล","คำนวณพื้นที่","หาค่า x","วัดมุม"],a:0},
+{q:"ค่าเฉลี่ย (Mean) ของ 2, 4, 6, 8, 10 คือ?",o:["6","5","7","8"],a:0},
+{q:"มัธยฐาน (Median) ของ 3, 1, 4, 1, 5, 9 คือ?",o:["3.5","4","3","5"],a:0},
+{q:"พื้นที่สามเหลี่ยมฐาน 8 สูง 5 เท่ากับ?",o:["20 ตร.หน่วย","40 ตร.หน่วย","13 ตร.หน่วย","16 ตร.หน่วย"],a:0},
+{q:"10³ = ?",o:["1,000","100","10,000","300"],a:0},
+{q:"ฐานนิยม (Mode) ของ 1,2,2,3,3,3,4 คือ?",o:["3","2","1","4"],a:0},
+{q:"สมการ 2x = 10 แก้ได้ x = ?",o:["5","2","10","20"],a:0},
+{q:"จำนวนที่มากกว่า -3 แต่น้อยกว่า 0 คือ?",o:["-1","-4","1","3"],a:0},
+{q:"ช่วง (Range) ของ 4,7,2,9,1 คือ?",o:["8","5","9","7"],a:0},
+{q:"ผลรวมของมุมในรูปห้าเหลี่ยมคือ?",o:["540°","360°","720°","480°"],a:0},
+{q:"สัดส่วนทองคำ (Golden Ratio) มีค่าประมาณ?",o:["1.618","1.414","3.14","2.718"],a:0},
+{q:"ปริมาตรกล่องสี่เหลี่ยม ยาว 3 กว้าง 2 สูง 4 = ?",o:["24 ลบ.หน่วย","9 ลบ.หน่วย","18 ลบ.หน่วย","12 ลบ.หน่วย"],a:0},
+{q:"ค่าของ √(9 + 16) = ?",o:["5","7","√25 (ตอบ 5)","25"],a:0},
+{q:"ถ้า y = 2x + 1 เมื่อ x = 3 แล้ว y = ?",o:["7","5","8","6"],a:0},
+{q:"เศษส่วน 7/8 มีค่ามากกว่า 3/4 หรือไม่?",o:["มากกว่า (7/8 > 6/8)","น้อยกว่า","เท่ากัน","ไม่สามารถเปรียบเทียบ"],a:0},
+{q:"รัศมีของวงกลมที่มีเส้นรอบวง 2π คือ?",o:["1 หน่วย","2 หน่วย","π หน่วย","0.5 หน่วย"],a:0},
+{q:"จำนวนนับที่มากกว่า 50 และน้อยกว่า 60 มีกี่จำนวน?",o:["9 จำนวน","10 จำนวน","8 จำนวน","11 จำนวน"],a:0},
+{q:"ผลต่างของ 1,000 - 357 = ?",o:["643","663","753","647"],a:0},
+{q:"ถ้าซื้อสินค้าราคา 80 บาท จ่าย 100 บาท ทอนเท่าไร?",o:["20 บาท","10 บาท","30 บาท","15 บาท"],a:0},
+{q:"บวกเลขโรมัน: V + III = ?",o:["VIII","VII","IX","VI"],a:0},
+{q:"ตัวเลขในฐาน 2 (Binary): 1010 มีค่าเท่าใดในฐาน 10?",o:["10","8","12","6"],a:0},
+{q:"ค่าของ |(-7)| คือ?",o:["7","-7","0","49"],a:0},
+{q:"ถ้าวงกลมมีรัศมี r พื้นที่ = ?",o:["πr²","2πr","πd","r²"],a:0},
+{q:"จุดกึ่งกลางระหว่างจุด (2,4) และ (6,8) คือ?",o:["(4,6)","(8,12)","(4,4)","(6,6)"],a:0},
+{q:"ผลลัพธ์ 3 + 4 × 2 = ? (ตามลำดับการคำนวณ)",o:["11","14","10","7"],a:0}
+],
+2:[
+{q:"ความชันของเส้นตรง y = 3x + 5 คือ?",o:["3","5","-3","1"],a:0},
+{q:"พื้นที่วงกลมรัศมี 5 ซม. เท่ากับ?",o:["25π cm²","10π cm²","5π cm²","50π cm²"],a:0},
+{q:"ถ้า 2x + 6 = 14 แล้ว x = ?",o:["4","7","8","3"],a:0},
+{q:"(-3) × (-4) = ?",o:["12","-12","7","-7"],a:0},
+{q:"ผลรวมมุมภายในรูปสี่เหลี่ยมเท่ากับ?",o:["360°","180°","270°","540°"],a:0},
+{q:"สมการเส้นตรงที่ผ่านจุดกำเนิดและมีความชัน 2 คือ?",o:["y = 2x","y = 2x + 2","2y = x","y = x + 2"],a:0},
+{q:"ถ้า a:b = 3:4 และ b:c = 2:5 แล้ว a:c = ?",o:["3:10","6:20","15:8","3:5"],a:0},
+{q:"จำนวนเต็ม n ที่ทำให้ 2n + 1 เป็นจำนวนเฉพาะ (n=1)?",o:["3","2","4","5"],a:0},
+{q:"ค่าของ √(x²) เมื่อ x < 0 คือ?",o:["|x|","x","-x","x²"],a:0},
+{q:"เส้นตรงสองเส้นที่ขนานกัน มีความชันอย่างไร?",o:["เท่ากัน","ตรงข้ามกัน","คูณกันได้ -1","ไม่เกี่ยวข้องกัน"],a:0},
+{q:"สมการ |x - 3| = 5 มีคำตอบคือ?",o:["x=8 หรือ x=-2","x=8","x=-2","x=2 หรือ x=8"],a:0},
+{q:"พื้นที่สามเหลี่ยมที่มีด้านสามด้าน a=3, b=4, c=5 คือ?",o:["6 ตร.หน่วย","12 ตร.หน่วย","5 ตร.หน่วย","7.5 ตร.หน่วย"],a:0},
+{q:"ถ้า f(x) = x² - 4 แล้ว f(3) = ?",o:["5","9","-1","13"],a:0},
+{q:"ค่าของ 2⁻³ = ?",o:["1/8","1/6","8","6"],a:0},
+{q:"เซตของจำนวนจริงทั้งหมด A = {1,2,3} B = {2,3,4} แล้ว A ∩ B = ?",o:["{2,3}","{1,2,3,4}","{1,4}","{}"],a:0},
+{q:"ค่าของ log₂ 8 = ?",o:["3","4","2","8"],a:0},
+{q:"ความน่าจะเป็นที่โยนเหรียญ 2 ครั้งได้หัวทั้งคู่?",o:["1/4","1/2","1/3","1/8"],a:0},
+{q:"สูตรระยะทางระหว่างจุด (x₁,y₁) และ (x₂,y₂)?",o:["√[(x₂-x₁)²+(y₂-y₁)²]","(x₂-x₁)+(y₂-y₁)","(x₂-x₁)²+(y₂-y₁)²","√(x₂²+y₂²)"],a:0},
+{q:"ถ้าดอกเบี้ยทบต้น 10% ต่อปี เงิน 1000 บาท หลัง 2 ปี = ?",o:["1,210 บาท","1,200 บาท","1,100 บาท","1,020 บาท"],a:0},
+{q:"จำนวนนับที่หาร 6 ลงตัวและ 4 ลงตัว น้อยที่สุดคือ?",o:["12","6","24","8"],a:0},
+{q:"ค่าของ (a+b)² = ?",o:["a²+2ab+b²","a²+b²","a²-2ab+b²","2a²+2b²"],a:0},
+{q:"กราฟของ y = -x² มีจุดยอด (Vertex) อยู่ที่?",o:["(0,0)","(1,1)","(-1,-1)","(0,1)"],a:0},
+{q:"ผลรวม 1+2+3+...+100 = ?",o:["5050","5000","4950","10100"],a:0},
+{q:"ถ้า P(A) = 0.3 และ P(B) = 0.4 และ A,B เป็น Independent P(A∩B) = ?",o:["0.12","0.7","0.1","0.34"],a:0},
+{q:"ระยะทางจากจุด (0,0) ถึงเส้นตรง 3x + 4y = 10 คือ?",o:["2","3","4","10"],a:0},
+{q:"ค่าของ sin²θ + cos²θ = ?",o:["1","0","2","sin2θ"],a:0},
+{q:"สมการ x² - 5x + 6 = 0 มีคำตอบคือ?",o:["x=2 หรือ x=3","x=1 หรือ x=6","x=2 หรือ x=-3","x=-2 หรือ x=-3"],a:0},
+{q:"เศษส่วนในรูปอย่างต่ำของ 18/24 คือ?",o:["3/4","6/8","9/12","18/24"],a:0},
+{q:"ถ้า y = x + 3 และ y = 2x - 1 จุดตัดคือ?",o:["(4,7)","(3,6)","(2,5)","(1,4)"],a:0},
+{q:"มุมในวงกลม (Inscribed Angle) = ครึ่งหนึ่งของ?",o:["มุมที่จุดศูนย์กลาง","มุมในวงกลมอีกมุม","เส้นรอบวง","รัศมี"],a:0},
+{q:"จำนวนวิธีเรียงลำดับ 4 สิ่งจาก 4 สิ่ง คือ?",o:["24","12","8","4"],a:0},
+{q:"ค่าของ (-1)¹⁰⁰ = ?",o:["1","-1","100","-100"],a:0},
+{q:"ค่าเฉลี่ยเลขคณิต (AM) ของ a และ b คือ?",o:["(a+b)/2","ab","√(ab)","2/(1/a+1/b)"],a:0},
+{q:"ค่าของ log 1 = ?",o:["0","1","-1","∞"],a:0},
+{q:"พาราโบลา y = ax² มีแกนสมมาตรที่?",o:["x = 0","y = 0","x = a","y = a"],a:0},
+{q:"ค่าของ cos 60° = ?",o:["0.5","1","0","√3/2"],a:0},
+{q:"ถ้า A ⊂ B แล้ว A ∪ B = ?",o:["B","A","A ∩ B","A ∪ B"],a:0},
+{q:"ค่าของ tan 45° = ?",o:["1","0","√3","1/√2"],a:0},
+{q:"สูตรพื้นที่ของสี่เหลี่ยมข้าวหลามตัด (Rhombus)?",o:["d₁×d₂/2","ด้าน×สูง","d₁+d₂","4×ด้าน"],a:0},
+{q:"อัตราส่วน sin:cos:tan สำหรับมุม 30° คือ?",o:["1/2 : √3/2 : 1/√3","√3/2 : 1/2 : √3","1/2 : 1/2 : 1","1 : 1 : 1"],a:0},
+{q:"ค่าของ |3 - 7| = ?",o:["4","-4","10","-10"],a:0},
+{q:"ค่าของ 3⁰ + 5⁰ = ?",o:["2","0","8","1"],a:0},
+{q:"ถ้า f(x) = 2x - 1 แล้ว f⁻¹(x) = ?",o:["(x+1)/2","(x-1)/2","2x+1","(x+1)/2"],a:0},
+{q:"เส้นตรง y = mx + c ตัดแกน y ที่จุด?",o:["(0, c)","(c, 0)","(m, 0)","(0, m)"],a:0},
+{q:"ถ้าโยนลูกเต๋าสมดุล ความน่าจะเป็นที่ได้ตาคี่ = ?",o:["1/2","1/3","1/6","2/3"],a:0},
+{q:"ค่าของ 2log 5 + log 4 = ?",o:["log 100 = 2","log 40","log 54","log 9"],a:0},
+{q:"ค่าของ sin 90° = ?",o:["1","0","-1","∞"],a:0},
+{q:"ความน่าจะเป็นที่เลือกลูกแดงจากถุงที่มีแดง 3 เขียว 2 คือ?",o:["3/5","2/5","1/5","3/2"],a:0},
+{q:"ค่าของ (2³)² = ?",o:["64","32","16","8"],a:0},
+{q:"ถ้า A = {1,2,3} จำนวนสับเซตทั้งหมดของ A คือ?",o:["8","6","4","7"],a:0},
+{q:"ความชันของเส้นตรงที่ตั้งฉากกับเส้น y = 2x คือ?",o:["-1/2","2","-2","1/2"],a:0},
+{q:"ผลลัพธ์ ⁵C₂ = ?",o:["10","20","5","15"],a:0},
+{q:"สมการ log x = 2 มีคำตอบ x = ?",o:["100","10","1000","20"],a:0},
+{q:"ค่าของ (a-b)³ ขยายได้เป็น?",o:["a³-3a²b+3ab²-b³","a³-b³","a³+b³","a³-3ab+b³"],a:0},
+{q:"เส้นรอบวงของวงกลมที่มีเส้นผ่านศูนย์กลาง 10 ซม. คือ?",o:["10π ซม.","5π ซม.","20π ซม.","π ซม."],a:0},
+{q:"ค่าของ tan 30° = ?",o:["1/√3","√3","1","1/2"],a:0},
+{q:"พาราโบลา y = x² - 4x + 3 มีจุดยอดที่?",o:["(2,-1)","(1,0)","(3,0)","(0,3)"],a:0},
+{q:"ความน่าจะเป็น P(A') ถ้า P(A) = 0.6 คือ?",o:["0.4","0.6","0.3","1.6"],a:0},
+{q:"การนับแบบเรียงสับเปลี่ยน nPr สูตรคือ?",o:["n!/(n-r)!","n!/r!","n!/(n-r)!r!","n!"],a:0},
+{q:"ถ้า logₐ b = c แล้ว a^c = ?",o:["b","a","c","logb"],a:0}
+],
+3:[
+{q:"สมการ x² − 9 = 0 มีคำตอบคือ?",o:["x = ±3","x = 3","x = 9","x = ±9"],a:0},
+{q:"log₁₀ 100 = ?",o:["2","10","100","1"],a:0},
+{q:"sin(90°) = ?",o:["1","0","−1","0.5"],a:0},
+{q:"พื้นที่สามเหลี่ยมฐาน 6 ซม. สูง 4 ซม. = ?",o:["12 cm²","24 cm²","10 cm²","8 cm²"],a:0},
+{q:"5! = ?",o:["120","60","24","720"],a:0},
+{q:"ผลลัพธ์ C(6,2) = ?",o:["15","12","30","6"],a:0},
+{q:"สมการ 2x² + 3x - 2 = 0 คำตอบ x = ?",o:["1/2 หรือ -2","2 หรือ -1/2","-2 หรือ -1","1 หรือ -3"],a:0},
+{q:"tan(45°) = ?",o:["1","0","√3","1/√2"],a:0},
+{q:"ค่าของ ∑(i=1 ถึง 5) i = ?",o:["15","10","20","25"],a:0},
+{q:"จำนวนเชิงซ้อน i² = ?",o:["-1","1","i","-i"],a:0},
+{q:"ค่าของ cos(0°) = ?",o:["1","0","-1","∞"],a:0},
+{q:"ผลลัพธ์ (2+3i) + (4-i) = ?",o:["6+2i","6+4i","2+4i","8-2i"],a:0},
+{q:"อนุกรม 1 + 1/2 + 1/4 + 1/8 + ... (อนุกรมเรขาคณิตอนันต์) มีผลรวม?",o:["2","1","3","∞"],a:0},
+{q:"ค่าของ sin(30°) = ?",o:["1/2","√3/2","1","√2/2"],a:0},
+{q:"สมการ log(x) + log(x+1) = log(6) มีคำตอบ x = ?",o:["2","3","-3","6"],a:0},
+{q:"สูตรการหาราก (Quadratic Formula) คือ?",o:["x = [-b ± √(b²-4ac)] / 2a","x = -b/2a","x = b/2a","x = ±√(-c/a)"],a:0},
+{q:"ถ้า f(x) = 3x² - 2x + 1 แล้ว f'(x) = ?",o:["6x - 2","3x - 2","6x + 2","3x + 1"],a:0},
+{q:"อนุพันธ์ของ sin(x) คือ?",o:["cos(x)","-cos(x)","sin(x)","-sin(x)"],a:0},
+{q:"ผลลัพธ์ ∫ 2x dx = ?",o:["x² + C","x + C","2x² + C","x²/2 + C"],a:0},
+{q:"ค่าของ lim(x→0) (sin x)/x = ?",o:["1","0","∞","ไม่มีลิมิต"],a:0},
+{q:"จำนวนวิธีเลือก 3 คนจาก 7 คน = ?",o:["35","21","105","7"],a:0},
+{q:"สมการวงกลม x² + y² = 25 มีรัศมีเท่าใด?",o:["5","25","10","√25"],a:0},
+{q:"ค่าของ cos(180°) = ?",o:["-1","1","0","∞"],a:0},
+{q:"อนุพันธ์ของ eˣ คือ?",o:["eˣ","xeˣ","eˣ/x","1/eˣ"],a:0},
+{q:"ผลลัพธ์ ∫₀¹ x² dx = ?",o:["1/3","1/2","1","2/3"],a:0},
+{q:"จำนวนคู่ที่เรียงสับเปลี่ยน 4 ตัวจาก 4 ตัว = ?",o:["24","12","8","4"],a:0},
+{q:"สมการพาราโบลา y² = 4x เป็นพาราโบลาที่เปิดไปทาง?",o:["ขวา","ซ้าย","ขึ้น","ลง"],a:0},
+{q:"ค่าของ tan(60°) = ?",o:["√3","1","1/√3","√2"],a:0},
+{q:"ค่าของ sin(π/6) = ?",o:["1/2","√3/2","1","√2/2"],a:0},
+{q:"ผลลัพธ์ (3+4i)(3-4i) = ?",o:["25","7","25+0i","9+16"],a:0},
+{q:"ค่าของ log₂ 32 = ?",o:["5","4","6","32"],a:0},
+{q:"อนุพันธ์ของ ln(x) คือ?",o:["1/x","ln(x)","x","eˣ"],a:0},
+{q:"ผลรวมอนุกรมเลขคณิต 1+3+5+...+19 = ?",o:["100","90","110","81"],a:0},
+{q:"สมการวงรี x²/9 + y²/4 = 1 มีกึ่งแกนยาวเท่าใด?",o:["3","2","4","9"],a:0},
+{q:"ค่าของ e⁰ = ?",o:["1","0","e","∞"],a:0},
+{q:"สูตร Euler: e^(iπ) + 1 = ?",o:["0","-1","1","2"],a:0},
+{q:"ค่าของ ∫ cos(x) dx = ?",o:["sin(x) + C","-sin(x) + C","cos(x) + C","-cos(x) + C"],a:0},
+{q:"ลิมิตของ (x²-1)/(x-1) เมื่อ x→1 = ?",o:["2","1","0","∞"],a:0},
+{q:"จำนวนจริงในช่วง [0, 2π] ที่ทำให้ sin(x) = 0 มีกี่ค่า?",o:["3 ค่า (0, π, 2π)","2 ค่า","1 ค่า","ไม่มี"],a:0},
+{q:"สมการ 3^x = 81 แก้ได้ x = ?",o:["4","3","27","81"],a:0},
+{q:"ค่าของ P(5,3) = 5!/(5-3)! = ?",o:["60","20","10","120"],a:0},
+{q:"สูตร de Moivre: (cosθ + i sinθ)^n = ?",o:["cos(nθ) + i sin(nθ)","n(cosθ + i sinθ)","cos(θⁿ) + i sin(θⁿ)","ncos(θ) + ni sin(θ)"],a:0},
+{q:"ค่าของ |2 + 3i| = ?",o:["√13","5","√5","13"],a:0},
+{q:"อนุพันธ์ของ x^n คือ?",o:["nx^(n-1)","x^(n+1)","n/x","x^n ln(x)"],a:0},
+{q:"ผลลัพธ์ ∫ eˣ dx = ?",o:["eˣ + C","xeˣ + C","eˣ/x + C","eˣ·x + C"],a:0},
+{q:"สูตรพื้นที่วงกลมในรูปอนุพันธ์มาจากการอินทิเกรตอะไร?",o:["∫₀ʳ 2πr dr","∫₀ʳ πr dr","∫₀²π r dθ","∫₀²π dθ"],a:0},
+{q:"เมทริกซ์ [[1,0],[0,1]] เรียกว่า?",o:["Identity Matrix","Zero Matrix","Diagonal Matrix","Singular Matrix"],a:0},
+{q:"ค่า Determinant ของ [[2,3],[1,4]] = ?",o:["5","8","11","14"],a:0},
+{q:"ค่าของ cos(π) = ?",o:["-1","1","0","π"],a:0},
+{q:"สมการ 2sin(x) = 1 มีคำตอบ x ในช่วง [0°,360°] = ?",o:["30° และ 150°","60° และ 120°","30° และ 210°","45° และ 135°"],a:0},
+{q:"ค่าของ ∑(n=1 ถึง ∞) (1/2)ⁿ = ?",o:["1","2","1/2","∞"],a:0},
+{q:"ค่าของ lim(x→∞) 1/x = ?",o:["0","1","∞","-1"],a:0},
+{q:"อนุพันธ์อันดับสองของ x³ คือ?",o:["6x","3x²","x","9x"],a:0},
+{q:"ค่าของ sin²(x) + cos²(x) = ? (Pythagorean Identity)?",o:["1","0","2","sin(2x)"],a:0},
+{q:"สมการเส้นตรงในรูปสมการพาราเมตริก: x = 1+t, y = 2+3t มีความชัน?",o:["3","1","1/3","2"],a:0},
+{q:"C(n,0) + C(n,1) + ... + C(n,n) = ?",o:["2ⁿ","n!","n","n²"],a:0},
+{q:"ผลลัพธ์ (1+i)² = ?",o:["2i","2","1+2i","2+2i"],a:0},
+{q:"ค่าของ arctan(1) = ? (ในหน่วย radian)",o:["π/4","π/2","π","π/6"],a:0}
+],
+4:[
+{q:"อนุพันธ์ของ f(x) = x³ คือ?",o:["3x²","x²","3x","2x²"],a:0},
+{q:"cos(0°) = ?",o:["1","0","−1","0.5"],a:0},
+{q:"ระยะทางระหว่างจุด (0,0) กับ (3,4) = ?",o:["5","7","4","6"],a:0},
+{q:"ค่าต่ำสุดของ f(x) = x² + 2x + 1 คือ?",o:["0","1","−1","2"],a:0},
+{q:"ความน่าจะเป็นที่โยนเหรียญสมดุลได้หัว 1 ครั้ง = ?",o:["1/2","1/4","1/3","1"],a:0},
+{q:"∫₀^π sin(x) dx = ?",o:["2","0","1","π"],a:0},
+{q:"อนุพันธ์ของ f(x) = e^(2x) คือ?",o:["2e^(2x)","e^(2x)","2xe^x","e^x"],a:0},
+{q:"ค่าของ lim(x→0) (eˣ-1)/x = ?",o:["1","0","e","∞"],a:0},
+{q:"สมการ Differential y' = y มีคำตอบทั่วไปคือ?",o:["y = Ce^x","y = Cx","y = Ce^(-x)","y = C"],a:0},
+{q:"ผลลัพธ์ ∫ x/(x²+1) dx = ?",o:["(1/2)ln(x²+1) + C","ln(x+1) + C","arctan(x) + C","(1/2)arctan(x) + C"],a:0},
+{q:"เวกเตอร์ a = (3,4) มีขนาด (Magnitude) เท่าใด?",o:["5","7","√7","12"],a:0},
+{q:"ผลคูณดอต (Dot Product) ของ (1,2,3)·(4,5,6) = ?",o:["32","15","12","6"],a:0},
+{q:"ค่าของ det([[a,b],[c,d]]) = ?",o:["ad-bc","ab-cd","ac-bd","ad+bc"],a:0},
+{q:"Taylor Series ของ eˣ ที่ x=0 คือ?",o:["1 + x + x²/2! + x³/3! + ...","1 + x + x² + x³ + ...","x + x²/2 + x³/3 + ...","e + ex + ex²/2 + ..."],a:0},
+{q:"ฟังก์ชัน f(x) = |x| มีอนุพันธ์ที่ x=0 หรือไม่?",o:["ไม่มี","มี ค่าเป็น 0","มี ค่าเป็น 1","มี ค่าเป็น -1"],a:0},
+{q:"สมการ Differential y'' + y = 0 มีคำตอบทั่วไปคือ?",o:["A cos(x) + B sin(x)","Ae^x + Be^(-x)","Ax + B","Ae^(2x)"],a:0},
+{q:"ค่าของ ∫₀¹ eˣ dx = ?",o:["e - 1","e","1","e + 1"],a:0},
+{q:"ผลคูณเวกเตอร์ (Cross Product) ของ i × j = ?",o:["k","-k","i","j"],a:0},
+{q:"ค่าของ lim(x→0⁺) x·ln(x) = ?",o:["0","1","-∞","∞"],a:0},
+{q:"สมการ Bernoulli Differential Equation y' + P(x)y = Q(x)yⁿ เป็นประเภทใด?",o:["Nonlinear ODE","Linear ODE","PDE","Integral Equation"],a:0},
+{q:"ทฤษฎีบท Fundamental Theorem of Calculus กล่าวว่า?",o:["การหาอนุพันธ์และอินทิเกรตเป็นกระบวนการผกผันกัน","การอินทิเกรตเป็นการหาพื้นที่","อนุพันธ์ของค่าคงที่เป็น 0","ลิมิตไม่เกี่ยวกับความต่อเนื่อง"],a:0},
+{q:"ค่าของ ∫ tan(x) dx = ?",o:["-ln|cos(x)| + C","ln|sin(x)| + C","sec²(x) + C","-cot(x) + C"],a:0},
+{q:"สมการ Laplace Transform ของ f(t)=1 คือ?",o:["1/s","s","1","e^s"],a:0},
+{q:"ค่าของ Rank ของเมทริกซ์ [[1,2],[2,4]] = ?",o:["1","2","0","4"],a:0},
+{q:"ค่าของ ∫₋∞^∞ e^(-x²) dx = ?",o:["√π","π","1","2"],a:0},
+{q:"กฎของ L'Hôpital ใช้ในกรณีใด?",o:["ลิมิตรูปแบบ 0/0 หรือ ∞/∞","ลิมิตทุกชนิด","หาอนุพันธ์","หาอินทิเกรต"],a:0},
+{q:"ค่าของ lim(n→∞) (1 + 1/n)ⁿ = ?",o:["e","1","∞","π"],a:0},
+{q:"Eigenvalue ของ [[3,1],[0,2]] คือ?",o:["3 และ 2","1 และ 2","3 และ 1","0 และ 3"],a:0},
+{q:"สมการ Fourier Series ใช้แทน?",o:["ฟังก์ชันเป็นผลรวมของ sin และ cos","ฟังก์ชันพหุนาม","ฟังก์ชัน Exponential","ฟังก์ชัน Log"],a:0},
+{q:"ค่าของ ∫ sec²(x) dx = ?",o:["tan(x) + C","sec(x) + C","cos(x) + C","sin(x) + C"],a:0},
+{q:"พื้นที่ใต้กราฟ f(x) = x² ตั้งแต่ x=0 ถึง x=3 คือ?",o:["9","27","6","18"],a:0},
+{q:"ค่าของ Trace ของเมทริกซ์ [[2,3],[1,4]] = ?",o:["6","8","5","11"],a:0},
+{q:"อนุพันธ์ของ arctan(x) คือ?",o:["1/(1+x²)","1/x","arctan(x)","1/(1-x²)"],a:0},
+{q:"ค่าของ ∫₀^(π/2) cos(x) dx = ?",o:["1","0","π/2","2"],a:0},
+{q:"ผลลัพธ์ ∫ 1/(1+x²) dx = ?",o:["arctan(x) + C","arcsin(x) + C","ln(1+x²) + C","1/(2x) + C"],a:0},
+{q:"สมการ sinh(x) = ?",o:["(eˣ - e^(-x))/2","(eˣ + e^(-x))/2","eˣ - e^(-x)","1/cosh(x)"],a:0},
+{q:"ทฤษฎีบท Green's Theorem เกี่ยวกับ?",o:["อินทิกรัลเส้นและพื้นที่สองมิติ","ปริมาตร","อินทิกรัลพื้นผิว","ลิมิต"],a:0},
+{q:"ค่าของ ∇·F สำหรับ F=(x,y,z) คือ?",o:["3","0","1","x+y+z"],a:0},
+{q:"สมการ z = x² + y² เป็นรูปทรงอะไร?",o:["พาราโบลอยด์","ทรงกลม","ทรงกระบอก","ไฮเปอร์โบลอยด์"],a:0},
+{q:"ค่าของ ∂/∂x (x²y + y³) = ?",o:["2xy","x² + 3y²","2y","2x + 3y²"],a:0},
+{q:"ค่าของ lim(x→∞) x·e^(-x) = ?",o:["0","1","∞","e"],a:0},
+{q:"ค่าของ Jacobian ของการแปลงเชิงขั้ว (Polar) = ?",o:["r","r²","1/r","r·θ"],a:0},
+{q:"ผลลัพธ์ ∫ x·eˣ dx = ?",o:["(x-1)eˣ + C","xeˣ + C","eˣ + C","x²eˣ/2 + C"],a:0},
+{q:"ค่าของ ∑(n=0 ถึง ∞) xⁿ เมื่อ |x|<1 = ?",o:["1/(1-x)","1/(1+x)","eˣ","ln(1-x)"],a:0},
+{q:"ค่าของ i^4 (จำนวนเชิงซ้อน) = ?",o:["1","-1","i","-i"],a:0},
+{q:"ค่าของ ∫₀^1 x·eˣ dx = ?",o:["1","e-1","e","2-e"],a:0},
+{q:"ฟังก์ชัน Gamma Γ(n) = ? เมื่อ n เป็นจำนวนเต็มบวก",o:["(n-1)!","n!","n","(n+1)!"],a:0},
+{q:"ค่าของ lim(x→0) sin(3x)/x = ?",o:["3","1","0","∞"],a:0},
+{q:"Convolution ของ f และ g ในโดเมน Laplace คือ?",o:["F(s)·G(s)","F(s)+G(s)","F(s)/G(s)","F(s)-G(s)"],a:0},
+{q:"ค่าของ ∫₀^∞ e^(-st)·1 dt = ? (Laplace Transform)",o:["1/s","s","1","e^s"],a:0},
+{q:"ทฤษฎีบท Stokes' Theorem เกี่ยวกับ?",o:["อินทิกรัลเส้นและ Curl ของเวกเตอร์","ความต่อเนื่อง","ลิมิต","อนุพันธ์"],a:0}
+]
+},
+english:{
+1:[
+{q:'What is the plural of "child"?',o:["children","childs","childes","child"],a:0},
+{q:'Complete: "She ___ a student."',o:["is","are","am","be"],a:0},
+{q:'"สีแดง" ภาษาอังกฤษคือ?',o:["red","blue","green","yellow"],a:0},
+{q:'What does "eight" mean?',o:["8","6","7","9"],a:0},
+{q:'"สวัสดีตอนเช้า" ภาษาอังกฤษคือ?',o:["Good morning","Good night","Good evening","Goodbye"],a:0},
+{q:'คำตรงข้ามของ "hot" คือ?',o:["cold","warm","cool","chilly"],a:0},
+{q:'"แมว" ภาษาอังกฤษคือ?',o:["cat","dog","bird","fish"],a:0},
+{q:'Verb ในประโยค "She runs fast" คือ?',o:["runs","she","fast","fast runs"],a:0},
+{q:'"ฉันชอบแอปเปิ้ล" ภาษาอังกฤษคือ?',o:["I like apples","I likes apples","I liked apples","I am liking apples"],a:0},
+{q:'คำว่า "big" มีความหมายว่า?',o:["ใหญ่","เล็ก","เร็ว","ช้า"],a:0},
+{q:'"They ___ happy." ควรเติมคำว่า?',o:["are","is","am","be"],a:0},
+{q:'คำที่สะกดถูกคือ?',o:["school","shool","scool","skool"],a:0},
+{q:'"สุนัข" ภาษาอังกฤษคือ?',o:["dog","cat","pig","cow"],a:0},
+{q:'"Monday" แปลว่า?',o:["วันจันทร์","วันอังคาร","วันพุธ","วันพฤหัส"],a:0},
+{q:'คำใดเป็น Noun?',o:["book","run","happy","quickly"],a:0},
+{q:'"I ___ 12 years old." ควรเติม?',o:["am","is","are","be"],a:0},
+{q:'"January" เป็นเดือนที่เท่าไหร่?',o:["1","2","3","12"],a:0},
+{q:'ตรงข้ามของ "day" คือ?',o:["night","morning","afternoon","evening"],a:0},
+{q:'"Hello" มีความหมายตรงกับข้อใด?',o:["สวัสดี","ลาก่อน","ขอบคุณ","ขอโทษ"],a:0},
+{q:'"We ___ in Bangkok." ควรเติม?',o:["live","lives","lived","living"],a:0},
+{q:'"Apple" มีพยางค์กี่พยางค์?',o:["2","1","3","4"],a:0},
+{q:'คำว่า "fast" สามารถเป็น Part of Speech อะไร?',o:["Adj หรือ Adv","เฉพาะ Noun","เฉพาะ Verb","เฉพาะ Adj"],a:0},
+{q:'"There ___ two cats." ควรเติม?',o:["are","is","am","be"],a:0},
+{q:'"ขอบคุณ" ภาษาอังกฤษคือ?',o:["Thank you","Sorry","Please","Excuse me"],a:0},
+{q:'ข้อใดเป็น Adjective?',o:["beautiful","quickly","run","jump"],a:0},
+{q:'"March" เป็นเดือนที่เท่าไหร่?',o:["3","1","2","4"],a:0},
+{q:'"I eat rice." "rice" เป็น?',o:["Object","Subject","Verb","Adjective"],a:0},
+{q:'คำว่า "they" เป็น Pronoun แบบใด?',o:["Third person plural","First person","Second person","Third person singular"],a:0},
+{q:'คำตรงข้ามของ "tall" คือ?',o:["short","long","small","tiny"],a:0},
+{q:'"Where ___ you from?" ควรเติม?',o:["are","is","am","be"],a:0},
+{q:'"book" เมื่อเป็นพหูพจน์คือ?',o:["books","bookes","bokes","book"],a:0},
+{q:'Article ที่ถูกต้อง: "___ elephant is big." คือ?',o:["An","A","The","(ไม่ต้องใส่)"],a:0},
+{q:'"Happy" ตรงข้ามคือ?',o:["sad","angry","tired","scared"],a:0},
+{q:'"ฉันชื่อทอม" ภาษาอังกฤษคือ?',o:["My name is Tom","I name Tom","I am name Tom","Name me Tom"],a:0},
+{q:'"10 + 5 = fifteen" คำว่า fifteen คือ?',o:["15","14","16","50"],a:0},
+{q:'คำว่า "run, runs, ran" เป็น verb รูปแบบอะไร?',o:["Base, 3rd person, Past","Past, Present, Future","Inf, Past, Future","Base, Past, Past participle"],a:0},
+{q:'"Can you ___ English?" ควรเติม?',o:["speak","speaks","speaking","spoke"],a:0},
+{q:'"Summer" แปลว่า?',o:["ฤดูร้อน","ฤดูหนาว","ฤดูใบไม้ร่วง","ฤดูใบไม้ผลิ"],a:0},
+{q:'"I ___ not like coffee." ควรเติม?',o:["do","does","did","am"],a:0},
+{q:'"Watch" มีความหมายใดบ้าง?',o:["ดู/นาฬิกา","วิ่ง/ว่ายน้ำ","เดิน/นั่ง","กิน/ดื่ม"],a:0},
+{q:'ประโยคคำถาม: "___ is your name?"',o:["What","Who","Where","When"],a:0},
+{q:'"He plays football." "plays" คือ?',o:["Verb","Noun","Adj","Adv"],a:0},
+{q:'คำที่สะกดผิดคือ?',o:["freind","friend","school","book"],a:0},
+{q:'"ฝน" ภาษาอังกฤษคือ?',o:["rain","snow","wind","sun"],a:0},
+{q:'"I ___ a student last year." ควรเติม?',o:["was","am","is","were"],a:0},
+{q:'"Please sit ___." (ลงบนเก้าอี้) ควรเติม?',o:["down","up","in","out"],a:0},
+{q:'"Three hundred" เขียนเป็นตัวเลขคือ?',o:["300","30","3000","3"],a:0},
+{q:'คำว่า "interesting" เป็น Part of Speech ใด?',o:["Adjective","Verb","Noun","Adverb"],a:0},
+{q:'"She ___ to school every day." ควรเติม?',o:["goes","go","going","gone"],a:0},
+{q:'"ฉันหิว" ภาษาอังกฤษคือ?',o:["I am hungry","I am angry","I am happy","I am tired"],a:0},
+{q:'Preposition ในประโยค "The cat is on the table" คือ?',o:["on","the","cat","is"],a:0},
+{q:'"What time is it?" = กี่โมง, "It is half past three." แปลว่า?',o:["3:30","3:15","3:45","3:00"],a:0},
+{q:'"They didn\'t ___ the movie." ควรเติม?',o:["watch","watches","watched","watching"],a:0},
+{q:'"Computer" มีพยางค์กี่พยางค์?',o:["3","2","4","1"],a:0},
+{q:'คำว่า "quickly" เป็น?',o:["Adverb","Adjective","Noun","Verb"],a:0},
+{q:'"Winter" แปลว่า?',o:["ฤดูหนาว","ฤดูร้อน","ฤดูใบไม้ร่วง","ฤดูใบไม้ผลิ"],a:0},
+{q:'"I have ___ apple." ควรเติม?',o:["an","a","the","(ไม่ต้องใส่)"],a:0},
+{q:'คำตรงข้ามของ "start" คือ?',o:["finish","begin","run","stop"],a:0},
+{q:'"He is taller ___ his brother." ควรเติม?',o:["than","then","that","as"],a:0},
+{q:'"Excuse me" ใช้ในสถานการณ์ใด?',o:["ขอโทษ/ขอทาง","ขอบคุณ","สวัสดี","ลาก่อน"],a:0},
+{q:'"ครูสอนนักเรียน" ภาษาอังกฤษคือ?',o:["The teacher teaches students.","The teacher is teaches students.","Teacher teach students.","The teacher teaching students."],a:0}
+],
+2:[
+{q:'ประโยค "I went to school yesterday." อยู่ใน Tense ใด?',o:["Simple Past","Simple Present","Future Tense","Present Perfect"],a:0},
+{q:'คำตรงข้ามของ "beautiful" คือ?',o:["ugly","pretty","nice","lovely"],a:0},
+{q:'เติมคำ: "I ___ in Bangkok since 2015."',o:["have lived","lived","live","am living"],a:0},
+{q:'คำใดสะกดถูกต้อง?',o:["necessary","nessecary","necesary","necessery"],a:0},
+{q:'คำถามที่ถูกต้องของ "She likes coffee." คือ?',o:["Does she like coffee?","Is she like coffee?","Do she like coffee?","Did she likes coffee?"],a:0},
+{q:'"I ___ my homework before dinner." ควรเติม?',o:["had done","did","have done","do"],a:0},
+{q:'Passive Voice ของ "They clean the room." คือ?',o:["The room is cleaned by them.","The room was cleaned by them.","The room cleaned by them.","The room is clean."],a:0},
+{q:'คำว่า "however" ทำหน้าที่เป็น?',o:["Conjunction","Noun","Verb","Adjective"],a:0},
+{q:'"She has been studying for 3 hours." Tense นี้คือ?',o:["Present Perfect Continuous","Present Perfect","Past Continuous","Simple Present"],a:0},
+{q:'"They will ___ the game tomorrow." ควรเติม?',o:["play","played","playing","plays"],a:0},
+{q:'รูป Comparative ของ "good" คือ?',o:["better","gooder","more good","best"],a:0},
+{q:'รูป Superlative ของ "bad" คือ?',o:["worst","baddest","most bad","badder"],a:0},
+{q:'"I wish I ___ taller." ควรเติม?',o:["were","am","was","be"],a:0},
+{q:'"She suggested ___ earlier." ควรเติม?',o:["leaving","to leave","left","leave"],a:0},
+{q:'Indirect Speech: He said "I am tired." → He said that ___ tired.',o:["he was","I am","he is","I was"],a:0},
+{q:'"The news ___ shocking." ควรเติม?',o:["was","were","are","be"],a:0},
+{q:'คำว่า "synonym" ของ "happy" คือ?',o:["joyful","sad","angry","tired"],a:0},
+{q:'Clause ในข้อใดเป็น Relative Clause?',o:["The man who called is my father.","He left early.","She is tired.","I like coffee."],a:0},
+{q:'"If it rains, I ___ stay home." ควรเติม (Zero Conditional)?',o:["will","would","stay","would stay"],a:0},
+{q:'"Neither Tom nor Jerry ___ here." ควรเติม?',o:["is","are","am","be"],a:0},
+{q:'คำตรงข้ามของ "generous" คือ?',o:["selfish","kind","giving","wealthy"],a:0},
+{q:'"We arrived ___ time." (ทันเวลา) ควรเติม?',o:["on","in","at","by"],a:0},
+{q:'ประโยคใดใช้ Present Perfect ถูกต้อง?',o:["I have seen that movie.","I have saw that movie.","I has seen that movie.","I seen that movie."],a:0},
+{q:'"Despite ___ tired, she finished the work." ควรเติม?',o:["being","to be","she was","her"],a:0},
+{q:'"The flight ___ at 6 a.m. tomorrow." (ตามตาราง) ควรเติม?',o:["leaves","is leaving","will leave","left"],a:0},
+{q:'Phrasal Verb: "She gave ___ smoking." ควรเติม?',o:["up","on","in","off"],a:0},
+{q:'"She is used to ___ early." ควรเติม?',o:["waking","wake","woke","to wake"],a:0},
+{q:'ประโยค "This is the book that I told you about." คือ Relative Clause ชนิดใด?',o:["Defining","Non-defining","Conditional","Interrogative"],a:0},
+{q:'คำที่ขีดเส้นใต้ในข้อใดเป็น Adverb? "He runs quickly."',o:["quickly","he","runs","(ไม่มี)"],a:0},
+{q:'"I would rather ___ than go." ควรเติม?',o:["stay","staying","to stay","stayed"],a:0},
+{q:'รูป 3rd form (Past Participle) ของ "write" คือ?',o:["written","wrote","write","writed"],a:0},
+{q:'"He is looking ___ a job." ควรเติม?',o:["for","at","after","to"],a:0},
+{q:'"It is important that he ___ on time." ควรเติม (Subjunctive)?',o:["be","is","was","were"],a:0},
+{q:'Countable Noun คือ?',o:["chair","water","information","advice"],a:0},
+{q:'ประโยคใดใช้ Comparative ถูกต้อง?',o:["She is more intelligent than him.","She is intelligenter than him.","She is most intelligent than him.","She is much intelligent than him."],a:0},
+{q:'"I am ___ to meet you." ควรเติม?',o:["pleased","pleasing","please","pleasant"],a:0},
+{q:'Modal Verb ที่แสดงความสามารถ คือ?',o:["can","must","should","ought to"],a:0},
+{q:'"The children enjoy ___ in the park." ควรเติม?',o:["playing","to play","played","play"],a:0},
+{q:'"I have never ___ sushi before." ควรเติม?',o:["eaten","ate","eat","eating"],a:0},
+{q:'คำว่า "ancient" หมายความว่า?',o:["โบราณ","ทันสมัย","สวยงาม","ยิ่งใหญ่"],a:0},
+{q:'"You must ___ a passport to travel abroad." ควรเติม?',o:["have","has","having","had"],a:0},
+{q:'ประโยค Active: "The dog bit the man." รูป Passive คือ?',o:["The man was bitten by the dog.","The man is bitten by the dog.","The man bitten by the dog.","The man was bite by the dog."],a:0},
+{q:'คำว่า "although" ใช้เพื่อ?',o:["แสดงความขัดแย้ง","แสดงเหตุผล","แสดงผลลัพธ์","แสดงเงื่อนไข"],a:0},
+{q:'"She ___ her keys in the car." (past) ควรเติม?',o:["left","leave","leaves","leaving"],a:0},
+{q:'รูป Comparative ของ "far" ที่ถูกต้องคือ?',o:["farther/further","more far","farest","farder"],a:0},
+{q:'"She is afraid ___ spiders." ควรเติม?',o:["of","from","to","about"],a:0},
+{q:'Suffix "-tion" เปลี่ยน Verb เป็น?',o:["Noun","Adjective","Adverb","Verb ใหม่"],a:0},
+{q:'"___ he works hard, he still fails." ควรเติม?',o:["Although","Because","So","Therefore"],a:0},
+{q:'"I am interested ___ science." ควรเติม?',o:["in","at","on","by"],a:0},
+{q:'Infinitive หลัง "want" ใช้รูปใด?',o:["to + base verb","base verb","-ing","past form"],a:0},
+{q:'"She is the most ___ student in class." ควรเติม?',o:["hardworking","harder working","hardest working","more hardworking"],a:0},
+{q:'ประโยคใดใช้ Future Continuous ถูกต้อง?',o:["I will be sleeping at 10pm.","I will sleep at 10pm.","I am sleeping at 10pm.","I shall sleep at 10pm."],a:0},
+{q:'คำว่า "frequently" เป็น Adverb of?',o:["Frequency","Manner","Time","Place"],a:0},
+{q:'รูป Past Participle ของ "break" คือ?',o:["broken","broke","breaked","break"],a:0},
+{q:'"I look forward ___ from you." ควรเติม?',o:["to hearing","to hear","hearing","heard"],a:0},
+{q:'คำย่อ e.g. ย่อมาจาก?',o:["exempli gratia (for example)","et alii","et cetera","ergo"],a:0},
+{q:'"She ___ her homework when I called." ควรเติม?',o:["was doing","did","does","is doing"],a:0},
+{q:'"He is good ___ maths." ควรเติม?',o:["at","in","on","for"],a:0},
+{q:'ประโยค Conditional Type 1 ใช้โครงสร้างใด?',o:["If+Simple Present, will+base verb","If+Past Simple, would+base","If+Past Perfect, would+have","If+Present, Present"],a:0},
+{q:'คำว่า "ambitious" หมายความว่า?',o:["มีความทะเยอทะยาน","ขี้เกียจ","สุภาพ","ฉลาด"],a:0}
+],
+3:[
+{q:'If I ___ rich, I would travel the world.',o:["were","was","am","be"],a:0},
+{q:'The book ___ written by J.K. Rowling.',o:["was","were","is","be"],a:0},
+{q:'"Benevolent" หมายความว่า?',o:["kind and generous","mean and cruel","lazy","scared"],a:0},
+{q:'I haven\'t seen him ___ last year.',o:["since","for","from","during"],a:0},
+{q:'ประโยคใดถูกต้องตามหลักไวยากรณ์?',o:["Neither he nor she is coming.","Neither he nor she are coming.","He or she are coming.","He nor she is coming."],a:0},
+{q:'"Had she studied harder, she ___ passed." ควรเติม?',o:["would have","would","will","had"],a:0},
+{q:'รูป Perfect Infinitive: "He seems ___ the answer."',o:["to have known","to know","knowing","known"],a:0},
+{q:'"The sooner ___, the better." ควรเติม?',o:["the better","it is","you are","we finish"],a:0},
+{q:'Inversion: "___ did I realize my mistake."',o:["Only then","Only","Then","Never"],a:0},
+{q:'Cleft Sentence: "___ Tom who broke the window."',o:["It was","It is","There was","What was"],a:0},
+{q:'"She treats me ___ if I were a child." ควรเติม?',o:["as","like","such","so"],a:0},
+{q:'คำว่า "ubiquitous" หมายความว่า?',o:["พบได้ทุกที่","หายาก","ชั่วคราว","ยิ่งใหญ่"],a:0},
+{q:'Passive Voice ของ "Someone has stolen my car." คือ?',o:["My car has been stolen.","My car was stolen.","My car is stolen.","My car had been stolen."],a:0},
+{q:'"I would sooner ___ than lie." ควรเติม?',o:["die","to die","dying","died"],a:0},
+{q:'Nominalization ของ "decide" คือ?',o:["decision","decisive","decided","deciding"],a:0},
+{q:'"The more you practice, ___ you become." ควรเติม?',o:["the better","better","more better","the best"],a:0},
+{q:'ประโยคใดแสดง Unreal Past?',o:["If I had studied, I would have passed.","If I study, I will pass.","If I studied, I would pass.","Unless I study, I fail."],a:0},
+{q:'Discourse Marker: "___ , he apologized." แสดงความขัดแย้ง',o:["Nevertheless","Therefore","Furthermore","Moreover"],a:0},
+{q:'คำว่า "loquacious" หมายความว่า?',o:["พูดมาก","เงียบ","ฉลาด","กล้าหาญ"],a:0},
+{q:'Ellipsis: "I like sushi. Does she?" = ?',o:["Does she like sushi?","Does she eat?","Is she hungry?","Does she want to?"],a:0},
+{q:'Cohesive Device: "He was late. ___, he missed the train." ควรเติม?',o:["As a result","However","In contrast","Moreover"],a:0},
+{q:'คำว่า "ephemeral" หมายความว่า?',o:["ชั่วคราว/สั้น","ถาวร","ยิ่งใหญ่","เก่าแก่"],a:0},
+{q:'Fronting: "___ I have never seen." (เน้นประธาน)',o:["Such beauty","Beauty such","Never beauty","Beauty never"],a:0},
+{q:'Modal Perfect: "He must ___ the test." (สรุปจากหลักฐาน)',o:["have passed","pass","passed","be passing"],a:0},
+{q:'Collocation ที่ถูกต้อง?',o:["make a decision","do a decision","take a decision","have a decision"],a:0},
+{q:'รูป Gerund ที่ถูกต้อง: "She avoided ___ him."',o:["meeting","to meet","met","meet"],a:0},
+{q:'คำที่มีความหมายใกล้เคียงกับ "meticulous" คือ?',o:["careful","careless","quick","bold"],a:0},
+{q:'Emphatic structure: "___ that she said surprised me."',o:["What","That","Which","How"],a:0},
+{q:'คำว่า "ambiguous" หมายความว่า?',o:["ไม่ชัดเจน/คลุมเครือ","ชัดเจน","ง่าย","ยาก"],a:0},
+{q:'Subjunctive ในประโยค Formal: "It is vital that she ___ present."',o:["be","is","was","were"],a:0},
+{q:'Passive Infinitive: "He wants ___ elected."',o:["to be","to have been","being","to"],a:0},
+{q:'คำว่า "sanguine" หมายความว่า?',o:["มองโลกในแง่ดี","สิ้นหวัง","โกรธ","กลัว"],a:0},
+{q:'Reported Question: She asked "Where do you live?" →',o:["She asked where I lived.","She asked where do I live.","She asked where I live.","She asked where did I live."],a:0},
+{q:'Apposition: "My friend, ___ is a doctor, called me." ควรเติม?',o:["who","whom","which","whose"],a:0},
+{q:'"Hardly ___ she arrived when it started raining."',o:["had","has","did","was"],a:0},
+{q:'คำว่า "pragmatic" หมายความว่า?',o:["เน้นสิ่งที่ใช้ได้จริง","เป็นทฤษฎี","ซับซ้อน","สวยงาม"],a:0},
+{q:'Mixed Conditional: "If she had studied, she ___ pass now."',o:["would","could have","would have","will"],a:0},
+{q:'คำที่ถูกต้องในการเติม: "Not only ___ late, but he also forgot his work."',o:["was he","he was","is he","did he"],a:0},
+{q:'คำว่า "tenacious" หมายความว่า?',o:["พยายามไม่ยอมแพ้","ขี้กลัว","ขี้เกียจ","อ่อนโยน"],a:0},
+{q:'ประโยคใดเป็น Defining Relative Clause?',o:["The car that I bought is red.","My car, which is red, is fast.","Tom, who is my friend, came.","The book, which I read, was good."],a:0},
+{q:'Catenative Verb: "She stopped ___ cigarettes."',o:["smoking","to smoke","smoke","smoked"],a:0},
+{q:'Tag Question ของ "Nobody came, ___?"',o:["did they","didn't they","didn't nobody","did nobody"],a:0},
+{q:'คำว่า "inveterate" หมายความว่า?',o:["เป็นนิสัยเรื้อรัง","ชั่วคราว","กล้าหาญ","ฉลาด"],a:0},
+{q:'Pseudo-Cleft: "___ he needs is a rest."',o:["What","That","Which","How"],a:0},
+{q:'คำ prefix "mis-" ให้ความหมายว่า?',o:["ผิด/ไม่ถูกต้อง","ใหม่","ใหญ่","ดี"],a:0},
+{q:'ประโยค "She was given a prize." มีโครงสร้างแบบใด?',o:["Passive with SVOO","Active","Conditional","Subjunctive"],a:0},
+{q:'Intensifier ในข้อใดเน้นมากที่สุด?',o:["absolutely","very","quite","fairly"],a:0},
+{q:'"So + Adj + be + Subject + that..." ตัวอย่างที่ถูกต้อง?',o:["So beautiful was she that all stared.","So beautiful she was that all stared.","She was so beautiful that all stared. (ปกติ)","So she was beautiful that all stared."],a:0},
+{q:'คำว่า "circumspect" หมายความว่า?',o:["ระมัดระวัง","ประมาท","กล้าหาญ","เร็ว"],a:0},
+{q:'Negative Inversion: "___ would I do such a thing."',o:["Never","Not","No","Nor"],a:0},
+{q:'Concession Clause: "___ the weather was bad, we went out."',o:["Even though","Because","So that","In order to"],a:0},
+{q:'คำว่า "verbose" หมายความว่า?',o:["ใช้คำมากเกินไป","กระชับ","ชัดเจน","ตรงประเด็น"],a:0},
+{q:'ประโยค "I suggest that he leave immediately." ใช้ไวยากรณ์ชนิดใด?',o:["Mandative Subjunctive","Present Simple","Past Simple","Conditional"],a:0},
+{q:'คำว่า "prolific" หมายความว่า?',o:["สร้างสรรค์ผลงานมาก","ขี้เกียจ","ซ้ำซาก","เงียบ"],a:0},
+{q:'Fronted Adverbial: "___ did we find the treasure." เน้นสถานที่',o:["Only there","There only","There","Only"],a:0},
+{q:'Lexical Cohesion: การใช้คำที่มีความหมายเกี่ยวข้องกันเพื่อ?',o:["เชื่อมข้อความให้สอดคล้อง","เน้นย้ำ","ขัดแย้ง","สรุป"],a:0},
+{q:'คำว่า "vindicate" หมายความว่า?',o:["พิสูจน์ความบริสุทธิ์","กล่าวหา","ลงโทษ","ลืม"],a:0}
+],
+4:[
+{q:'"At the drop of a hat" หมายความว่า?',o:["immediately","carefully","slowly","accidentally"],a:0},
+{q:'Passive ของ "They built this house in 1990"?',o:["This house was built in 1990.","This house is built in 1990.","This house built in 1990.","This house has built in 1990."],a:0},
+{q:'"Ephemeral" หมายความว่า?',o:["lasting a very short time","eternal","beautiful","enormous"],a:0},
+{q:'Article: "___ honest man is rare."',o:["An","A","The","(ไม่ต้องใส่)"],a:0},
+{q:'Conditional ใดถูกต้อง?',o:["Had I known, I would have helped.","If I would have known, I would help.","If I would know, I would have helped.","Had I know, I would help."],a:0},
+{q:'Idiom: "Beat around the bush" หมายความว่า?',o:["หลบเลี่ยงประเด็น","ตีพุ่มไม้","วิ่งรอบ","ทำงานช้า"],a:0},
+{q:'คำว่า "laconic" หมายความว่า?',o:["พูดน้อย กระชับ","พูดมาก","ฉลาด","กล้าหาญ"],a:0},
+{q:'Discourse: "He worked hard. ___, he succeeded." ควรเติม?',o:["Consequently","However","Meanwhile","Nevertheless"],a:0},
+{q:'Colligation: คำว่า "prevent" ตามด้วยโครงสร้างใด?',o:["prevent + Object + from + -ing","prevent + to + V","prevent + that","prevent + Object + to + V"],a:0},
+{q:'Advanced Passive: "It ___ that he was ill." (Impersonal Passive)',o:["was reported","is reporting","reported","has reported"],a:0},
+{q:'Hedging Language: ข้อใดเป็น Hedging?',o:["It seems that the results suggest...","The results prove...","It is certain that...","Definitely, the data shows..."],a:0},
+{q:'คำว่า "obfuscate" หมายความว่า?',o:["ทำให้สับสน/ไม่ชัดเจน","ทำให้ชัดเจน","ชมเชย","วิจารณ์"],a:0},
+{q:'Formal Register: ข้อใดเป็นภาษาทางการ?',o:["I would like to enquire about...","I wanna ask about...","Can you tell me about...","What\'s up with..."],a:0},
+{q:'Ellipsis: "She can sing and so ___ he."',o:["can","do","is","does"],a:0},
+{q:'Anaphoric Reference: "Tom is smart. ___ always does well."',o:["He","The boy","Tom he","This"],a:0},
+{q:'Hedging ในงานวิชาการ: "___ that further research is needed."',o:["It appears","It is obvious","It is clear","It proves"],a:0},
+{q:'Idiom: "Bite the bullet" หมายความว่า?',o:["อดทนทำสิ่งยาก","กัดกระสุน","กินอาหาร","หยุดทำ"],a:0},
+{q:'Cleft Sentence เน้น Object: "The report that ___ wrote was excellent."',o:["she","her","hers","herself"],a:0},
+{q:'คำว่า "perfidious" หมายความว่า?',o:["ทรยศ/ไม่น่าเชื่อถือ","ซื่อสัตย์","ฉลาด","สุภาพ"],a:0},
+{q:'Academic Writing: ประโยค Thesis Statement ควรเป็นอย่างไร?',o:["ระบุประเด็นหลักชัดเจนและโต้เถียงได้","บรรยายทั่วไป","ยกตัวอย่าง","สรุปย่อ"],a:0},
+{q:'Rhetorical Question: "Isn\'t it obvious?" มีจุดประสงค์เพื่อ?',o:["เน้นย้ำ ไม่ต้องการคำตอบ","ถามข้อมูล","ขอความช่วยเหลือ","แสดงความสงสัย"],a:0},
+{q:'คำว่า "equivocate" หมายความว่า?',o:["พูดคลุมเครือเพื่อหลีกเลี่ยง","พูดตรงๆ","โกหก","เงียบ"],a:0},
+{q:'Stylistic Device: การซ้ำโครงสร้างประโยคเพื่อเน้นเรียกว่า?',o:["Parallelism","Alliteration","Metaphor","Irony"],a:0},
+{q:'Nominalization ใน Academic Writing ช่วยอะไร?',o:["ทำให้ดูเป็นทางการและกระชับ","ทำให้อ่านง่าย","เพิ่มคำศัพท์","ลดความซับซ้อน"],a:0},
+{q:'Lexical Density สูงหมายความว่า?',o:["มี Content Words หนาแน่น","ใช้ Function Words มาก","ประโยคสั้น","ใช้ Passive มาก"],a:0},
+{q:'คำว่า "inimical" หมายความว่า?',o:["เป็นปฏิปักษ์/เป็นอันตราย","เป็นมิตร","เป็นกลาง","ดีงาม"],a:0},
+{q:'Cataphoric Reference ในข้อใด?',o:["This is my advice: work hard.","He is smart. Tom always wins.","She left early. Mary was tired.","The dog barked. It was loud."],a:0},
+{q:'Advanced Discourse: "Notwithstanding ___, we continued." ใช้ Notwithstanding เพื่อ?',o:["แสดงข้อขัดแย้ง","เพิ่มเหตุผล","ยกตัวอย่าง","สรุป"],a:0},
+{q:'คำว่า "perspicacious" หมายความว่า?',o:["มีวิจารณญาณแหลมคม","โง่เขลา","ขี้กังวล","ใจดี"],a:0},
+{q:'Polyphonic Text หมายถึง?',o:["ข้อความที่มีหลายมุมมอง","ข้อความที่มีเสียงดัง","ข้อความสั้น","ข้อความที่ขัดแย้ง"],a:0},
+{q:'Figurative Language: "Life is a journey." เป็น?',o:["Metaphor","Simile","Hyperbole","Personification"],a:0},
+{q:'Idiom: "The ball is in your court" หมายความว่า?',o:["ตอนนี้เป็นหน้าที่ของคุณ","เล่นกีฬา","รอผล","ตัดสิน"],a:0},
+{q:'คำว่า "irascible" หมายความว่า?',o:["โกรธง่าย","อ่อนโยน","ใจเย็น","กล้าหาญ"],a:0},
+{q:'Critical Discourse Analysis (CDA) เน้นเรื่องใด?',o:["ความสัมพันธ์ระหว่างภาษากับอำนาจ","ไวยากรณ์","การออกเสียง","คำศัพท์"],a:0},
+{q:'Idiomatic Expression: "Spill the beans" หมายความว่า?',o:["เปิดเผยความลับ","ทำอาหาร","ทำของหก","รีบไป"],a:0},
+{q:'คำว่า "magnanimous" หมายความว่า?',o:["ใจกว้าง/ให้อภัยง่าย","ขี้เหนียว","โกรธง่าย","กลัว"],a:0},
+{q:'Euphemism: "Passed away" ใช้แทนคำว่า?',o:["died","left","disappeared","went"],a:0},
+{q:'Alliteration ในข้อใด?',o:["Peter Piper picked a peck","The cat sat on the mat","She sells seashells","โดด/เด่น/ดัง"],a:0},
+{q:'Syntactic Ambiguity ในข้อใด?',o:["I saw the man with binoculars.","The cat is black.","She runs fast.","He is tall."],a:0},
+{q:'คำว่า "ostentatious" หมายความว่า?',o:["โอ้อวด/แสดงออกเกินจริง","เรียบง่าย","สุภาพ","เงียบ"],a:0},
+{q:'Discourse Coherence สร้างขึ้นจาก?',o:["ความต่อเนื่องของความหมายและโครงสร้าง","คำศัพท์เท่านั้น","ความยาวประโยค","การสะกดคำ"],a:0},
+{q:'คำว่า "recalcitrant" หมายความว่า?',o:["ดื้อรั้น/ไม่ยอมทำตาม","เชื่อฟัง","กล้าหาญ","ขยัน"],a:0},
+{q:'Implicit Meaning ใน Pragmatics เรียกว่า?',o:["Implicature","Explicature","Presupposition","Reference"],a:0},
+{q:'Speech Act Theory: "Could you pass the salt?" เป็น?',o:["Indirect Request","Direct Question","Statement","Command"],a:0},
+{q:'คำว่า "pellucid" หมายความว่า?',o:["ใสแจ๋ว/ชัดเจน","ขุ่นมัว","ซับซ้อน","มืด"],a:0},
+{q:'Grice\'s Maxim of Quantity กล่าวว่า?',o:["ให้ข้อมูลพอดี ไม่มากหรือน้อยเกิน","ให้ข้อมูลจริง","พูดตรงประเด็น","พูดกระชับ"],a:0},
+{q:'คำว่า "solipsistic" หมายความว่า?',o:["เชื่อว่าตัวเองเป็นสิ่งเดียวที่มีอยู่จริง","เห็นแก่ผู้อื่น","เป็นกลาง","มีเหตุผล"],a:0},
+{q:'Intertextuality หมายถึง?',o:["ความสัมพันธ์ระหว่างข้อความต่างๆ","การอ้างอิง","การสรุป","การวิจารณ์"],a:0},
+{q:'คำว่า "obsequious" หมายความว่า?',o:["ประจบสอพลอเกินไป","กล้าหาญ","ซื่อสัตย์","ฉลาด"],a:0},
+{q:'Pragmatic Failure เกิดขึ้นเมื่อ?',o:["ผู้พูดไม่เข้าใจความหมายแฝงทางสังคม","สะกดผิด","ไวยากรณ์ผิด","ออกเสียงผิด"],a:0},
+{q:'คำว่า "mellifluous" หมายความว่า?',o:["ไพเราะ/น่าฟัง","หยาบคาย","ดัง","เงียบ"],a:0},
+{q:'Lexical Gap หมายถึง?',o:["ภาษาหนึ่งไม่มีคำสำหรับแนวคิดหนึ่ง","คำที่หายาก","คำใหม่","คำโบราณ"],a:0},
+{q:'คำว่า "pusillanimous" หมายความว่า?',o:["ขี้ขลาด","กล้าหาญ","ฉลาด","ใจดี"],a:0},
+{q:'Malapropism หมายถึง?',o:["ใช้คำผิดที่ออกเสียงคล้ายกัน","การแต่งคำใหม่","การยืมคำ","การตัดคำ"],a:0}
+]
+}
+};
+
+/* ── CONFIG ── */
+const SC={
+  science:{name:'วิทยาศาสตร์',bar:'sci-fill',btn:'sci-nxt'},
+  math:{name:'คณิตศาสตร์',bar:'math-fill',btn:'math-nxt'},
+  english:{name:'ภาษาอังกฤษ',bar:'eng-fill',btn:'eng-nxt'}
+};
+
+/* ── STATE ── */
+let st={screen:'home',subj:null,grade:null,qs:[],qi:0,score:0,ans:false,setSize:10,nickname:'',saveStatus:'idle',attemptId:null};
+
+/* ── CONFIG ── */
+const SHEET_WEB_APP_URL='https://script.google.com/macros/s/AKfycbxdp4p-0HMSGqzP9qhQ6ZvpIJMvOQJkDD1XOYz3NruVZKWxUjZ9dJtLx2NZF1jaPWBi/exec';
+
+/* ── UTILS ── */
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':'&quot;',"'":'&#39;'}[m]));}
+function getDeviceId(){
+  let id=localStorage.getItem('qt_device_id');
+  if(!id){
+    id='dev_'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);
+    localStorage.setItem('qt_device_id',id);
+  }
+  return id;
+}
+function newAttemptId(){return 'att_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);}
+function saveLocalResult(payload){
+  const rows=JSON.parse(localStorage.getItem('qt_score_log')||'[]');
+  rows.push(payload);
+  localStorage.setItem('qt_score_log',JSON.stringify(rows));
+}
+async function sendScoreToSheet(){
+  if(st.saveStatus==='saving'||st.saveStatus==='saved')return;
+  const payload={
+    attemptId:st.attemptId,
+    nickname:st.nickname.trim(),
+    subjectKey:st.subj,
+    subjectName:SC[st.subj]?.name||st.subj,
+    grade:st.grade,
+    totalQuestions:st.qs.length,
+    score:st.score,
+    wrong:st.qs.length-st.score,
+    percent:st.qs.length?Math.round((st.score/st.qs.length)*100):0,
+    playedAt:new Date().toISOString(),
+    userAgent:navigator.userAgent,
+    deviceId:getDeviceId()
+  };
+  saveLocalResult(payload);
+  if(!SHEET_WEB_APP_URL || SHEET_WEB_APP_URL.includes('PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE')){
+    st.saveStatus='local-only';
+    return;
+  }
+  try{
+    st.saveStatus='saving';
+    await fetch(SHEET_WEB_APP_URL,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(payload)
+    });
+    st.saveStatus='saved';
+  }catch(err){
+    console.error('save score failed',err);
+    st.saveStatus='error';
+  }
+}
+
+function prepQ(s,g,n){
+  const pool=QB[s][g];
+  const picked=shuffle(pool).slice(0,n);
+  return picked.map(q=>{
+    const o=[...q.o],cor=o[q.a];
+    const so=shuffle(o);
+    return{q:q.q,o:so,a:so.indexOf(cor)};
+  });
+}
+
+/* ── RENDER ── */
+function render(){
+  const map={home:homeHTML,grade:gradeHTML,quiz:quizHTML,result:resultHTML,guide:guideHTML};
+  document.getElementById('qz').innerHTML=`<div class="scr">${map[st.screen]()}</div>`;
+}
+
+function openGuide(s){st.subj=s;st.screen='guide';render();}
+function toggleTopic(id){
+  const b=document.getElementById(id);
+  const c=document.getElementById(id+'-chev');
+  if(b){b.classList.toggle('open');c&&c.classList.toggle('open');}
+}
+
+/* ── GUIDE CONTENT ── */
+const GUIDE={
+science:[
+  {icon:'🧫',title:'เซลล์ – หน่วยพื้นฐานของสิ่งมีชีวิต',items:[
+    {t:'โครงสร้างเซลล์เปรียบเทียบ',f:'เซลล์พืช มี: ผนังเซลล์ + คลอโรพลาสต์ + แวคิวโอลใหญ่\nเซลล์สัตว์ มี: เซนทริโอล + ไลโซโซม (ไม่มีผนังเซลล์)',d:'ทั้งคู่มีเหมือนกัน: นิวเคลียส, เยื่อหุ้มเซลล์, ไมโทคอนเดรีย, ไรโบโซม, ER, กอลจิ',ex:{q:'เซลล์พืชต่างจากเซลล์สัตว์อย่างไร?',a:'มีผนังเซลล์, คลอโรพลาสต์, และแวคิวโอลขนาดใหญ่'}},
+    {t:'หน้าที่ออร์แกเนลล์สำคัญ',f:'นิวเคลียส → ควบคุมเซลล์ / เก็บ DNA\nไมโทคอนเดรีย → สร้าง ATP (พลังงาน)\nคลอโรพลาสต์ → สังเคราะห์แสง\nไรโบโซม → สังเคราะห์โปรตีน\nกอลจิบอดี → บรรจุและส่งโปรตีน',d:'จำง่าย: "นิวเคลียสเป็นผู้บัญชาการ ไมโทคอนเดรียเป็นโรงไฟฟ้า"',ex:{q:'ATP สร้างที่ออร์แกเนลล์ใด?',a:'ไมโทคอนเดรีย'}},
+    {t:'การแบ่งเซลล์',f:'ไมโทซิส → แบ่งเซลล์ร่างกาย → ได้ 2 เซลล์ (DNA เหมือนเดิม)\nไมโอซิส → แบ่งเซลล์สืบพันธุ์ → ได้ 4 เซลล์ (DNA ครึ่งหนึ่ง)',d:'ไมโอซิสทำให้เกิดไข่และอสุจิ ซึ่งมีโครโมโซมครึ่งหนึ่งของเซลล์ปกติ',ex:{q:'การแบ่งเซลล์แบบไมโทซิสได้เซลล์ลูกกี่เซลล์?',a:'2 เซลล์ที่มี DNA เหมือนเซลล์แม่ทุกประการ'}},
+  ]},
+  {icon:'🌿',title:'การสังเคราะห์แสงและการหายใจ',items:[
+    {t:'สมการการสังเคราะห์แสง',f:'6CO₂ + 6H₂O + แสงอาทิตย์ → C₆H₁₂O₆ + 6O₂',d:'สถานที่: คลอโรพลาสต์ (ในใบไม้)\nสิ่งที่ต้องการ: แสง + น้ำ + CO₂\nผลิตภัณฑ์: น้ำตาลกลูโคส + ออกซิเจน\nคลอโรฟิลล์ = สารสีเขียวที่ดูดซับแสง',ex:{q:'พืชต้องการอะไรในการสังเคราะห์แสง?',a:'แสงอาทิตย์ + น้ำ (H₂O) + คาร์บอนไดออกไซด์ (CO₂)'}},
+    {t:'การหายใจระดับเซลล์',f:'C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + ATP (พลังงาน)',d:'เกิดที่: ไมโทคอนเดรีย\nแบบใช้ O₂ (Aerobic): ได้ ATP 36-38 หน่วย\nแบบไม่ใช้ O₂ (Anaerobic): ได้ ATP 2 หน่วย + แลคติก/แอลกอฮอล์',ex:{q:'การหายใจแบบ Aerobic ให้พลังงานกี่ ATP?',a:'36-38 ATP ต่อกลูโคส 1 โมเลกุล'}},
+  ]},
+  {icon:'🧬',title:'พันธุกรรมและวิวัฒนาการ',items:[
+    {t:'DNA และยีน',f:'DNA → ยีน → โครโมโซม → นิวเคลียส\nมนุษย์มีโครโมโซม 46 แท่ง (23 คู่)',d:'DNA ประกอบด้วยเบส 4 ชนิด: A-T-G-C\nA จับคู่กับ T | G จับคู่กับ C\nลักษณะทางพันธุกรรมถ่ายทอดจากพ่อแม่สู่ลูก',ex:{q:'มนุษย์มีโครโมโซมกี่แท่ง?',a:'46 แท่ง หรือ 23 คู่'}},
+    {t:'กฎของเมนเดล',f:'เด่น (Dominant) บดบัง ด้อย (Recessive)\nBb = แสดงลักษณะเด่น (B)\nbb = แสดงลักษณะด้อย',d:'สัญลักษณ์: ตัวพิมพ์ใหญ่ = เด่น | ตัวพิมพ์เล็ก = ด้อย\nBB = เด่นแท้ | Bb = เด่นทาง | bb = ด้อยแท้',ex:{q:'พ่อเป็น Bb แม่เป็น Bb ลูกมีโอกาสแสดงลักษณะด้อย (bb) กี่%?',a:'25% (BB:Bb:bb = 1:2:1)'}},
+    {t:'วิวัฒนาการของดาร์วิน',f:'Natural Selection = คัดเลือกโดยธรรมชาติ\nสิ่งมีชีวิตที่ปรับตัวได้ดีกว่า → รอดและสืบพันธุ์',d:'ตัวอย่าง: ยีราฟคอยาวกว่าได้กินใบไม้สูง → รอดชีวิต → สืบพันธุ์\nวิวัฒนาการเกิดช้ามากผ่านหลายล้านปี',ex:{q:'Natural Selection หมายถึงอะไร?',a:'ธรรมชาติคัดสิ่งมีชีวิตที่ปรับตัวได้ดีกว่าให้รอดชีวิต'}},
+  ]},
+  {icon:'⚗️',title:'สสาร สารเคมี และปฏิกิริยา',items:[
+    {t:'สถานะของสสาร',f:'ของแข็ง ⇌ ของเหลว ⇌ แก๊ส',d:'ของแข็ง → ของเหลว = หลอมเหลว (ดูดความร้อน)\nของเหลว → แก๊ส = ระเหย (ดูดความร้อน)\nแก๊ส → ของเหลว = ควบแน่น (คายความร้อน)\nของเหลว → ของแข็ง = แข็งตัว (คายความร้อน)',ex:{q:'น้ำเดือดกลายเป็นไอ เป็นการเปลี่ยนแปลงแบบใด?',a:'ระเหย/เดือด (ดูดพลังงานความร้อน)'}},
+    {t:'ค่า pH และกรด-เบส',f:'pH 0–6 = กรด\npH 7 = กลาง (Neutral)\npH 8–14 = เบส (ด่าง)',d:'กรด: เปรี้ยว เช่น HCl, H₂SO₄, น้ำส้มสายชู, น้ำมะนาว\nเบส: ฝาดขม ลื่นมือ เช่น NaOH, แอมโมเนีย, ผงฟู\nทดสอบด้วย: กระดาษลิตมัส หรือ Universal Indicator',ex:{q:'กระดาษลิตมัสสีแดงจุ่มในเบส จะเปลี่ยนเป็นสีอะไร?',a:'สีน้ำเงิน (กรดทำให้แดง เบสทำให้น้ำเงิน)'}},
+    {t:'ปฏิกิริยาเคมีดูดและคายความร้อน',f:'Exothermic = คายความร้อน → ผลิตภัณฑ์มีพลังงานต่ำกว่า\nEndothermic = ดูดความร้อน → ผลิตภัณฑ์มีพลังงานสูงกว่า',d:'ตัวอย่าง Exothermic: การเผาไหม้, สนิมเหล็ก, ระเบิด\nตัวอย่าง Endothermic: การสังเคราะห์แสง, ต้มน้ำ, การหลอมโลหะ',ex:{q:'การเผาไหม้ไม้เป็นปฏิกิริยาแบบใด?',a:'Exothermic คายความร้อนออกมา (รู้สึกร้อน)'}},
+    {t:'ตารางธาตุเบื้องต้น',f:'คาบ (Period) = แถวนอน\nหมู่ (Group) = คอลัมน์ตั้ง\nเลขอะตอม = จำนวนโปรตอน',d:'จำธาตุสำคัญ:\nH=1, He=2, Li=3, C=6, N=7, O=8, Na=11, Mg=12\nAl=13, Si=14, P=15, S=16, Cl=17, Ar=18, K=19, Ca=20\nFe=26, Cu=29, Zn=30, Ag=47, Au=79',ex:{q:'ออกซิเจนมีเลขอะตอมเท่าไหร่?',a:'8 (มีโปรตอน 8 ตัว)'}},
+  ]},
+  {icon:'🌍',title:'โลก บรรยากาศ และอวกาศ',items:[
+    {t:'ชั้นบรรยากาศโลก',f:'โทรโพสเฟียร์ (0-12km) → สตราโทสเฟียร์ (12-50km)\n→ มีโซสเฟียร์ (50-85km) → เทอร์โมสเฟียร์ (85km+)',d:'โทรโพสเฟียร์: ชั้นที่เราอยู่ มีเมฆและฝน\nสตราโทสเฟียร์: มีโอโซน ป้องกัน UV\nมีโซสเฟียร์: อุกกาบาตเผาไหม้ที่นี่\nเทอร์โมสเฟียร์: ดาวเทียมโคจร',ex:{q:'ชั้นโอโซนอยู่ในชั้นบรรยากาศใด?',a:'สตราโทสเฟียร์ ที่ความสูง 15-35 km'}},
+    {t:'ระบบสุริยะ – ลำดับดาวเคราะห์',f:'ดาวพุธ ศุกร์ โลก อังคาร | พฤหัส เสาร์ ยูเรนัส เนปจูน',d:'จำง่ายๆ: "พุ-ศุ-โล-อา | พฤ-เส-ยู-เน"\nดาวที่ใหญ่สุด = ดาวพฤหัสบดี\nดาวที่มีวงแหวนสวย = ดาวเสาร์\nดาวที่ร้อนสุด = ดาวศุกร์ (บรรยากาศหนา)\nดาวที่เย็นสุด = ดาวเนปจูน',ex:{q:'ดาวเคราะห์ดวงที่ 5 จากดวงอาทิตย์คือ?',a:'ดาวพฤหัสบดี (ใหญ่สุดในระบบสุริยะ)'}},
+    {t:'ปรากฏการณ์ทางดาราศาสตร์',f:'สุริยุปราคา = ดวงจันทร์บังดวงอาทิตย์ (กลางวัน)\nจันทรุปราคา = โลกบังดวงจันทร์ (กลางคืน)',d:'ดวงจันทร์โคจรรอบโลก ≈ 29.5 วัน\nโลกโคจรรอบดวงอาทิตย์ ≈ 365.25 วัน\nโลกหมุนรอบตัวเอง = 24 ชั่วโมง\nแกนโลกเอียง 23.5° → เกิดฤดูกาล',ex:{q:'ทำไมโลกถึงมีฤดูกาล?',a:'เพราะแกนโลกเอียง 23.5° ทำให้แต่ละซีกโลกรับแสงอาทิตย์ต่างกัน'}},
+  ]},
+  {icon:'⚡',title:'แรง การเคลื่อนที่ และพลังงาน',items:[
+    {t:'กฎการเคลื่อนที่ของนิวตัน 3 ข้อ',f:'ข้อ 1: ถ้าไม่มีแรง วัตถุจะคงสภาพ (หยุดนิ่งหรือเคลื่อนที่สม่ำเสมอ)\nข้อ 2: F = m × a\nข้อ 3: ทุกแรงกิริยามีแรงปฏิกิริยาเท่ากันและตรงข้าม',d:'F = แรง (Newton, N)\nm = มวล (กิโลกรัม, kg)\na = ความเร่ง (m/s²)\nน้ำหนัก W = mg (g ≈ 9.8 m/s²)',ex:{q:'วัตถุมวล 5 kg รับแรง 20 N มีความเร่งเท่าไหร่?',a:'a = F/m = 20/5 = 4 m/s²'}},
+    {t:'ความเร็ว ความเร่ง และระยะทาง',f:'ความเร็ว v = ระยะทาง / เวลา\nความเร่ง a = (v - u) / t\nระยะทาง s = ut + ½at²',d:'u = ความเร็วต้น | v = ความเร็วปลาย | t = เวลา\nv² = u² + 2as',ex:{q:'รถวิ่ง 60 km ใน 2 ชม. มีความเร็วเฉลี่ยเท่าไหร่?',a:'v = 60/2 = 30 km/h'}},
+    {t:'พลังงานศักย์และพลังงานจลน์',f:'พลังงานศักย์ EP = mgh\nพลังงานจลน์ EK = ½mv²\nกฎอนุรักษ์พลังงาน: EP + EK = คงที่',d:'m = มวล (kg), g = 9.8 m/s², h = ความสูง (m), v = ความเร็ว (m/s)\nเมื่อตก EP ลด → EK เพิ่ม (พลังงานรวมคงที่)',ex:{q:'ลูกบอล 1kg อยู่สูง 10m มี EP เท่าไหร่?',a:'EP = 1 × 9.8 × 10 = 98 J'}},
+    {t:'คลื่นและเสียง',f:'ความเร็วคลื่น v = fλ\nf = ความถี่ (Hz) | λ = ความยาวคลื่น (m)',d:'เสียงเป็นคลื่นตามยาว ต้องการตัวกลาง\nแสงเป็นคลื่นตามขวาง ไม่ต้องการตัวกลาง\nเสียงเดินทางเร็วสุดใน: ของแข็ง > ของเหลว > แก๊ส\nแสงเดินทางเร็วสุดใน: สุญญากาศ ≈ 3×10⁸ m/s',ex:{q:'คลื่นความถี่ 440 Hz ความยาวคลื่น 0.77 m ความเร็วเท่าไหร่?',a:'v = 440 × 0.77 ≈ 340 m/s (เสียงในอากาศ)'}},
+  ]},
+  {icon:'🔋',title:'ไฟฟ้าและแม่เหล็ก',items:[
+    {t:'กฎของโอห์ม',f:'V = I × R\nV = แรงดันไฟฟ้า (โวลต์, V)\nI = กระแสไฟฟ้า (แอมแปร์, A)\nR = ความต้านทาน (โอห์ม, Ω)',d:'วิธีจำ: VIR triangle\nหา V: V = IR | หา I: I = V/R | หา R: R = V/I',ex:{q:'วงจรมีแรงดัน 12V ความต้านทาน 4Ω กระแส = ?',a:'I = V/R = 12/4 = 3 A'}},
+    {t:'วงจรอนุกรม vs ขนาน',f:'อนุกรม: R_total = R₁ + R₂ + R₃ | กระแส I เท่ากันทุกตัว\nขนาน: 1/R_total = 1/R₁ + 1/R₂ | แรงดัน V เท่ากันทุกตัว',d:'อนุกรม: หลอดดับหลอดเดียว ทั้งหมดดับ\nขนาน: หลอดดับหลอดเดียว ที่เหลือยังสว่าง\nบ้านเราใช้ระบบขนาน',ex:{q:'R₁=3Ω R₂=6Ω ต่อขนาน R_total = ?',a:'1/R = 1/3 + 1/6 = 3/6 → R = 2 Ω'}},
+    {t:'แม่เหล็กและสนามแม่เหล็ก',f:'เส้นแรงแม่เหล็กออกจากขั้วเหนือ → เข้าขั้วใต้\nขั้วเหมือนกัน → ผลักกัน\nขั้วต่างกัน → ดึงดูดกัน',d:'การเหนี่ยวนำแม่เหล็กไฟฟ้า (Faraday):\nเคลื่อนตัวนำผ่านสนามแม่เหล็ก → เกิดกระแสไฟฟ้า\nใช้หลักการนี้: ไดนาโม, เครื่องปั่นไฟ',ex:{q:'ขั้วเหนือสองแท่งวางชนกัน จะเกิดอะไร?',a:'ผลักกัน (ขั้วเหมือนกันผลัก ขั้วต่างกันดึงดูด)'}},
+  ]},
+  {icon:'🦠',title:'ร่างกายมนุษย์และสุขภาพ',items:[
+    {t:'ระบบในร่างกายมนุษย์',f:'',d:'🫀 ระบบหมุนเวียนเลือด: หัวใจ+หลอดเลือด ลำเลียง O₂+สารอาหาร\n🫁 ระบบหายใจ: ปอด แลกเปลี่ยน O₂/CO₂\n🧠 ระบบประสาท: สมอง+ไขสันหลัง+เส้นประสาท ควบคุมร่างกาย\n🦷 ระบบย่อยอาหาร: ปาก→หลอดอาหาร→กระเพาะ→ลำไส้เล็ก→ลำไส้ใหญ่\n🦴 ระบบโครงกระดูกและกล้ามเนื้อ: รองรับและเคลื่อนไหว\n🚰 ระบบขับถ่าย: ไต กรองของเสียออกทางปัสสาวะ',ex:{q:'อวัยวะใดกรองของเสียออกจากเลือด?',a:'ไต (สร้างปัสสาวะ)'}},
+    {t:'เลือดและหมู่เลือด',f:'เลือดประกอบด้วย:\nเม็ดเลือดแดง (ลำเลียง O₂) + เม็ดเลือดขาว (ต้านเชื้อโรค)\n+ เกล็ดเลือด (แข็งตัว) + พลาสมา (ของเหลว)',d:'หมู่เลือด ABO: A, B, AB, O\nหมู่ O = ให้เลือดได้ทุกหมู่ (Universal Donor)\nหมู่ AB = รับเลือดได้ทุกหมู่ (Universal Recipient)',ex:{q:'หมู่เลือดใดให้เลือดกับทุกคนได้?',a:'หมู่เลือด O (Universal Donor)'}},
+    {t:'ฮอร์โมนสำคัญ',f:'',d:'ต่อมใต้สมอง → Growth Hormone (การเจริญเติบโต)\nต่อมไทรอยด์ → Thyroxine (เผาผลาญพลังงาน)\nตับอ่อน → Insulin (ลดน้ำตาลในเลือด) / Glucagon (เพิ่มน้ำตาล)\nต่อมหมวกไต → Adrenaline (สู้หรือหนี Fight or Flight)\nอัณฑะ → Testosterone | รังไข่ → Estrogen/Progesterone',ex:{q:'ฮอร์โมนใดควบคุมระดับน้ำตาลในเลือด?',a:'อินซูลิน (ลด) และกลูคากอน (เพิ่ม) ผลิตที่ตับอ่อน'}},
+  ]},
+],
+math:[
+  {icon:'📐',title:'เรขาคณิต – พื้นที่และปริมาตร',items:[
+    {t:'รูปสี่เหลี่ยม',f:'สี่เหลี่ยมผืนผ้า: พื้นที่ = กว้าง × ยาว\nสี่เหลี่ยมจัตุรัส: พื้นที่ = ด้าน²\nสี่เหลี่ยมขนมเปียกปูน: พื้นที่ = ฐาน × สูง\nสี่เหลี่ยมคางหมู: พื้นที่ = ½(a+b)×h',d:'เส้นรอบรูปทุกรูป = บวกด้านทั้งหมด\nสี่เหลี่ยมผืนผ้า: เส้นรอบรูป = 2(กว้าง+ยาว)',ex:{q:'สี่เหลี่ยมคางหมูขนาน 4 กับ 8 สูง 5 พื้นที่ = ?',a:'½(4+8)×5 = ½×12×5 = 30 ตร.หน่วย'}},
+    {t:'วงกลม',f:'พื้นที่ = πr²\nเส้นรอบวง (Circumference) = 2πr\nเส้นผ่านศูนย์กลาง d = 2r\nπ ≈ 3.14159 (ใช้ 22/7 ในการคำนวณ)',d:'รัศมี r = ระยะจากศูนย์กลางถึงเส้นรอบวง\nเส้นผ่านศูนย์กลาง = รัศมี × 2',ex:{q:'วงกลมรัศมี 7 ซม. เส้นรอบวง = ?',a:'2 × 22/7 × 7 = 44 ซม.'}},
+    {t:'สามเหลี่ยม',f:'พื้นที่ = ½ × ฐาน × สูง\nสูตรเฮรอน: A = √[s(s-a)(s-b)(s-c)]\nโดย s = (a+b+c)/2',d:'ผลรวมมุมภายใน = 180°\nสามเหลี่ยมด้านเท่า: ทุกมุม = 60°\nสามเหลี่ยมมุมฉาก: มุมหนึ่ง = 90°',ex:{q:'สามเหลี่ยมฐาน 10 สูง 6 พื้นที่ = ?',a:'½ × 10 × 6 = 30 ตร.หน่วย'}},
+    {t:'ปริมาตรทรงสามมิติ',f:'ทรงสี่เหลี่ยม: V = กว้าง × ยาว × สูง\nทรงกระบอก: V = πr²h\nทรงกรวย: V = ⅓πr²h\nทรงกลม: V = 4/3 πr³',d:'พื้นที่ผิว (Surface Area):\nทรงสี่เหลี่ยม SA = 2(lb+bh+lh)\nทรงกระบอก SA = 2πr² + 2πrh',ex:{q:'ทรงกระบอกรัศมี 3 สูง 7 ปริมาตร = ?',a:'π × 3² × 7 = 63π ≈ 197.9 ลบ.หน่วย'}},
+    {t:'ทฤษฎีพีทาโกรัส',f:'a² + b² = c²\n(c = ด้านตรงข้ามมุมฉาก / hypotenuse)',d:'ใช้กับสามเหลี่ยมมุมฉากเท่านั้น!\nคู่ที่จำง่าย (Pythagorean Triple):\n(3,4,5) (5,12,13) (8,15,17) (7,24,25)\nคูณ n เท่าได้เลย: (6,8,10) (9,12,15)',ex:{q:'บันไดยาว 5m พิงกำแพงสูง 4m ฐานห่างกำแพง = ?',a:'√(5²-4²) = √(25-16) = √9 = 3 m'}},
+  ]},
+  {icon:'🔢',title:'พีชคณิต – สมการและอสมการ',items:[
+    {t:'การแก้สมการ 1 ตัวแปร',f:'หลักการ: ทำสิ่งเดียวกันกับทั้งสองข้าง\nย้ายพจน์ = เปลี่ยนเครื่องหมายแล้วย้ายข้าง',d:'วิธีแก้:\n1. กระจายวงเล็บ\n2. รวมพจน์เหมือนกัน\n3. ย้ายตัวแปรไปข้างหนึ่ง ตัวเลขอีกข้างหนึ่ง\n4. หาร/คูณเพื่อให้ coefficient = 1',ex:{q:'3x + 7 = 22 แก้สมการหา x',a:'3x = 22-7 = 15 → x = 5'}},
+    {t:'สมการกำลังสอง ax²+bx+c=0',f:'วิธีที่ 1: แยกตัวประกอบ\nวิธีที่ 2: สูตรกำลังสอง\nx = [-b ± √(b²-4ac)] / 2a',d:'Discriminant D = b²-4ac\nD > 0 → 2 คำตอบจริงต่างกัน\nD = 0 → 1 คำตอบซ้ำ (x = -b/2a)\nD < 0 → ไม่มีคำตอบจริง',ex:{q:'x²-7x+12 = 0 หา x',a:'(x-3)(x-4) = 0 → x = 3 หรือ x = 4'}},
+    {t:'ระบบสมการสองตัวแปร',f:'วิธี Substitution: แทนค่าตัวแปรหนึ่ง\nวิธี Elimination: บวก/ลบสมการเพื่อตัดตัวแปร',d:'ตัวอย่างระบบ:\nx + y = 10 ... (1)\nx - y = 2  ... (2)\n(1)+(2): 2x = 12 → x = 6\nแทนใน (1): 6+y = 10 → y = 4',ex:{q:'2x+y=7 และ x-y=2 หา x,y',a:'บวกกัน: 3x=9 → x=3, y=1'}},
+    {t:'อสมการเชิงเส้น',f:'เหมือนสมการ แต่เมื่อคูณ/หารด้วยจำนวนลบ → เปลี่ยนทิศทาง!',d:'x > 2 หมายถึง x มากกว่า 2 ไม่รวม 2\nx ≥ 2 หมายถึง x มากกว่าหรือเท่ากับ 2 รวม 2\nกราฟ: จุดปิด ● = รวม | จุดเปิด ○ = ไม่รวม',ex:{q:'-2x < 6 แก้อสมการ',a:'-2x < 6 → x > -3 (หารด้วยลบ เปลี่ยนทิศ!)'}},
+    {t:'การแยกตัวประกอบ',f:'a²-b² = (a+b)(a-b)  ← ผลต่างกำลังสอง\n(a+b)² = a²+2ab+b²\n(a-b)² = a²-2ab+b²\n(a+b)³ = a³+3a²b+3ab²+b³',d:'เทคนิคการแยก:\n1. ดูตัวร่วม\n2. จัดกลุ่ม\n3. ลองเดา (trial and error) สำหรับ ax²+bx+c',ex:{q:'แยกตัวประกอบ x²-9',a:'x²-9 = (x+3)(x-3) ← ผลต่างกำลังสอง'}},
+  ]},
+  {icon:'📊',title:'สถิติ ความน่าจะเป็น และการนับ',items:[
+    {t:'ค่ากลางของข้อมูล',f:'Mean (เฉลี่ย) = ∑x / n\nMedian (มัธยฐาน) = ค่ากลางเมื่อเรียงแล้ว\nMode (ฐานนิยม) = ค่าที่ซ้ำมากสุด\nRange (พิสัย) = ค่าสูงสุด - ค่าต่ำสุด',d:'ถ้าข้อมูล n คู่ Median = เฉลี่ยของ 2 ค่ากลาง\nตัวอย่าง: 2,3,5,7,9 → Median = 5',ex:{q:'หา Mean, Median, Mode ของ 3,5,5,7,10',a:'Mean = 30/5 = 6 | Median = 5 | Mode = 5'}},
+    {t:'ความน่าจะเป็น (Probability)',f:'P(A) = จำนวนผลที่ต้องการ / ผลทั้งหมด\n0 ≤ P(A) ≤ 1\nP(A) + P(A\') = 1',d:'การเหตุการณ์อิสระ: P(A∩B) = P(A)×P(B)\nการเหตุการณ์ Mutually Exclusive: P(A∪B) = P(A)+P(B)\nP(A∪B) = P(A)+P(B)-P(A∩B) (ทั่วไป)',ex:{q:'ไพ่ 52 ใบ P(โพดำ) = ?',a:'13/52 = 1/4 = 0.25 = 25%'}},
+    {t:'การเรียงสับเปลี่ยน (Permutation)',f:'nPr = n! / (n-r)!\nการจัดทุกตัว: n! = n×(n-1)×...×2×1',d:'ใช้เมื่อ: ลำดับสำคัญ (A,B ≠ B,A)\nตัวอย่าง: เรียง 3 คนจาก 5 คน\n= 5P3 = 5!/(5-3)! = 5×4×3 = 60 วิธี',ex:{q:'เรียงตัวอักษร A,B,C,D เลือก 2 ตัว = ?',a:'4P2 = 4!/(4-2)! = 4×3 = 12 วิธี'}},
+    {t:'การเลือก (Combination)',f:'nCr = n! / [r!(n-r)!]\nอ่านว่า "n choose r"',d:'ใช้เมื่อ: ลำดับไม่สำคัญ (AB = BA)\nตัวอย่าง: เลือก 3 คนจาก 5 คน\n= 5C3 = 5!/(3!×2!) = 10 วิธี\nC(n,0) = C(n,n) = 1',ex:{q:'เลือกทีม 2 คนจาก 6 คน = ?',a:'6C2 = 6!/(2!×4!) = 15 วิธี'}},
+  ]},
+  {icon:'📏',title:'ตรีโกณมิติ',items:[
+    {t:'อัตราส่วนตรีโกณมิติ',f:'sin θ = ตรงข้าม / ด้านตรงข้ามมุมฉาก (O/H)\ncos θ = ชิดมุม / ด้านตรงข้ามมุมฉาก (A/H)\ntan θ = ตรงข้าม / ชิดมุม (O/A)',d:'จำง่ายๆ: SOH – CAH – TOA\nsin=Opp/Hyp | cos=Adj/Hyp | tan=Opp/Adj\ntan θ = sin θ / cos θ',ex:{q:'สามเหลี่ยมมุมฉาก ด้านตรงข้าม 3 ด้านยาว 5 sin A = ?',a:'sin A = 3/5 = 0.6'}},
+    {t:'ตารางค่าตรีโกณมิติ',f:'',d:'มุม  | sin      | cos     | tan\n0°   | 0        | 1       | 0\n30°  | 1/2      | √3/2    | 1/√3\n45°  | √2/2     | √2/2    | 1\n60°  | √3/2     | 1/2     | √3\n90°  | 1        | 0       | ∞',ex:{q:'sin 60° + cos 30° = ?',a:'√3/2 + √3/2 = √3 ≈ 1.732'}},
+    {t:'เอกลักษณ์ตรีโกณมิติ',f:'sin²θ + cos²θ = 1  ← สำคัญมาก!\n1 + tan²θ = sec²θ\n1 + cot²θ = csc²θ',d:'มุมเสริม: sin(90°-θ) = cos θ\nมุมประ: sin(180°-θ) = sin θ\ncos(180°-θ) = -cos θ',ex:{q:'ถ้า sin θ = 0.6 แล้ว cos θ = ?',a:'cos θ = √(1-0.36) = √0.64 = 0.8'}},
+    {t:'กฎของ sine และ cosine',f:'กฎ sine: a/sin A = b/sin B = c/sin C\nกฎ cosine: a² = b²+c²-2bc·cos A',d:'ใช้กฎ sine: รู้มุม-ด้านตรงข้ามอย่างละ 1\nใช้กฎ cosine: รู้ด้าน 3 ด้าน หรือ ด้าน 2 + มุมที่ประกอบด้วยกัน',ex:{q:'สามเหลี่ยม a=7, b=5, C=60° หา c',a:'c² = 49+25-2(7)(5)cos60° = 74-35 = 39 → c = √39'}},
+  ]},
+  {icon:'∞',title:'แคลคูลัสเบื้องต้น',items:[
+    {t:'ลิมิต (Limit)',f:'lim(x→a) f(x) = L\nวิธีหา: แทนค่า / แยกตัวประกอบ / กฎ L\'Hôpital',d:'lim(x→0) (sin x)/x = 1\nlim(x→∞) (1+1/n)ⁿ = e ≈ 2.718\nถ้าได้รูป 0/0 หรือ ∞/∞ → ใช้ L\'Hôpital',ex:{q:'lim(x→2) (x²-4)/(x-2) = ?',a:'= lim (x+2)(x-2)/(x-2) = lim(x+2) = 4'}},
+    {t:'อนุพันธ์ (Derivative)',f:'f\'(x) = lim[f(x+h)-f(x)]/h\nd/dx (xⁿ) = nxⁿ⁻¹\nd/dx (sin x) = cos x\nd/dx (cos x) = -sin x\nd/dx (eˣ) = eˣ\nd/dx (ln x) = 1/x',d:'กฎลูกโซ่: d/dx[f(g(x))] = f\'(g(x))·g\'(x)\nกฎคูณ: d/dx[f·g] = f\'g + fg\'\nกฎหาร: d/dx[f/g] = (f\'g - fg\')/g²',ex:{q:'f(x) = 3x⁴ - 2x² + 5 หา f\'(x)',a:'f\'(x) = 12x³ - 4x'}},
+    {t:'อินทิกรัล (Integral)',f:'∫xⁿ dx = xⁿ⁺¹/(n+1) + C\n∫eˣ dx = eˣ + C\n∫(1/x) dx = ln|x| + C\n∫sin x dx = -cos x + C\n∫cos x dx = sin x + C',d:'Fundamental Theorem: ∫ₐᵇ f(x)dx = F(b) - F(a)\nพื้นที่ใต้กราฟ = ∫ₐᵇ f(x) dx',ex:{q:'∫(3x²+2x) dx = ?',a:'x³ + x² + C'}},
+  ]},
+  {icon:'🔣',title:'เลขยกกำลัง ลอการิทึม และจำนวนเชิงซ้อน',items:[
+    {t:'กฎเลขยกกำลัง',f:'aᵐ × aⁿ = aᵐ⁺ⁿ\naᵐ ÷ aⁿ = aᵐ⁻ⁿ\n(aᵐ)ⁿ = aᵐⁿ\na⁰ = 1 (a≠0)\na⁻ⁿ = 1/aⁿ\na^(m/n) = ⁿ√(aᵐ)',d:'จำง่าย: คูณกัน → บวกเลขชี้กำลัง\nหารกัน → ลบเลขชี้กำลัง',ex:{q:'2³ × 2⁴ = ?',a:'2³⁺⁴ = 2⁷ = 128'}},
+    {t:'ลอการิทึม (Logarithm)',f:'log_a(b) = c ↔ aᶜ = b\nln x = log_e x (e ≈ 2.718)\nlog(AB) = logA + logB\nlog(A/B) = logA - logB\nlog(Aⁿ) = n·logA',d:'log₁₀ 10 = 1 | log₁₀ 100 = 2\nln e = 1 | log 1 = 0 (ทุกฐาน)\nlogₐ a = 1 | logₐ 1 = 0',ex:{q:'log₂ 32 = ?',a:'2⁵ = 32 ดังนั้น log₂ 32 = 5'}},
+    {t:'จำนวนเชิงซ้อน',f:'i = √(-1)\ni² = -1, i³ = -i, i⁴ = 1\nจำนวนเชิงซ้อน z = a + bi\n|z| = √(a²+b²)',d:'การบวก: (a+bi)+(c+di) = (a+c)+(b+d)i\nการคูณ: (a+bi)(c+di) = (ac-bd)+(ad+bc)i\nComplex Conjugate ของ a+bi คือ a-bi',ex:{q:'(2+3i)(1-i) = ?',a:'= 2-2i+3i-3i² = 2+i+3 = 5+i'}},
+  ]},
+],
+english:[
+  {icon:'🔤',title:'Verb to be: is / am / are / was / were',items:[
+    {t:'ปัจจุบัน: is / am / are',f:'',d:'',table:{heads:['Subject','Verb to be','ตัวอย่าง'],rows:[['I','am','I am a student. / I am happy.'],['He / She / It','is','She is tall. / It is hot.'],['ชื่อคนเดียว','is','Tom is my friend.'],['You','are','You are smart.'],['We / They','are','They are brothers.'],['พหูพจน์ทั่วไป','are','The dogs are big.']]}},
+    {t:'อดีต: was / were',f:'',d:'',table:{heads:['Subject','อดีต','ตัวอย่าง'],rows:[['I / He / She / It','was','I was sick yesterday.'],['You / We / They','were','They were happy.']]}},
+    {t:'รูปปฏิเสธและคำถาม',f:'ปฏิเสธ: Subject + is/am/are + NOT\nคำถาม: Is/Am/Are + Subject + ...?',d:'Short forms: I\'m not | She isn\'t | They aren\'t\nคำตอบสั้น: Yes, she is. / No, she isn\'t.',ex:{q:'"เธอเป็นครูไหม?" และ "ไม่ใช่"',a:'Is she a teacher? — No, she isn\'t.'}},
+  ]},
+  {icon:'⏰',title:'Tenses ทั้ง 12 กาล',items:[
+    {t:'4 กาลหลักที่ควรรู้',f:'',d:'',table:{heads:['Tense','โครงสร้าง','ตัวอย่าง'],rows:[['Simple Present','V1 (s/es สำหรับ he/she/it)','She eats every day.'],['Simple Past','V2 (past form)','She ate yesterday.'],['Present Continuous','is/am/are + V-ing','She is eating now.'],['Present Perfect','has/have + V3','She has eaten already.']]}},
+    {t:'คำชี้นำแต่ละ Tense',f:'',d:'Simple Present: always, usually, often, sometimes, never, every day\nSimple Past: yesterday, ago, last night/week/year, in 2010\nPresent Continuous: now, at the moment, currently, look!\nPresent Perfect: already, yet, just, since, for, ever, never, recently',ex:{q:'"ฉันยังไม่ได้กินข้าวเลย" ใช้ Tense ใด?',a:'Present Perfect: I haven\'t eaten yet.'}},
+    {t:'Past Simple vs Present Perfect',f:'Past Simple: เหตุการณ์จบสมบูรณ์ในอดีต (มีเวลาระบุ)\nPresent Perfect: ผลยังต่อเนื่องถึงปัจจุบัน (ไม่ระบุเวลา)',d:'❌ I have seen him yesterday. (ผิด! yesterday = Past)\n✅ I saw him yesterday.\n✅ I have seen that movie. (ไม่บอกว่าเมื่อไหร่)',ex:{q:'"ฉันเริ่มเรียนภาษาอังกฤษตั้งแต่ปี 2020"',a:'I have studied English since 2020.'}},
+    {t:'Future Tenses',f:'will + V1 → ตัดสินใจขณะพูด / ทำนาย\nbe going to + V1 → แผนที่วางไว้แล้ว\nbe + V-ing → นัดหมายแน่นอน',d:'I\'m tired. I\'ll sleep early. (ตัดสินใจตอนนี้)\nI\'m going to visit London. (วางแผนแล้ว)\nI\'m meeting her at 3pm. (นัดแล้ว)',ex:{q:'"พรุ่งนี้ฉันจะไปโรงพยาบาล (นัดแล้ว)" แปลว่า?',a:'I\'m going to the hospital tomorrow.'}},
+    {t:'Conditional Sentences 3 ประเภท',f:'Type 1: If + Present, will + V1 (จริง/เป็นไปได้)\nType 2: If + Past, would + V1 (สมมุติปัจจุบัน)\nType 3: If + Past Perfect, would have + V3 (สมมุติอดีต)',d:'Type 1: If it rains, I will stay home.\nType 2: If I were rich, I would buy a car.\nType 3: If she had studied, she would have passed.',ex:{q:'"ถ้าฉันเป็นนก ฉันก็จะบินได้" Type ใด?',a:'Type 2: If I were a bird, I would fly.'}},
+  ]},
+  {icon:'📝',title:'Articles: a / an / the / ไม่ต้องใส่',items:[
+    {t:'กฎการใช้ A และ AN',f:'a = ใช้กับเสียงพยัญชนะ\nan = ใช้กับเสียงสระ (a, e, i, o, u)',d:'⚠️ ดูเสียงที่ออก ไม่ใช่ตัวสะกด!\n✅ a university (ออก "ยู" = พยัญชนะ)\n✅ an hour (ออก "อา" = สระ)\n✅ a European country (ออก "ยู" = พยัญชนะ)\n✅ an MBA degree (ออก "เอม" = สระ)',ex:{q:'"___ umbrella" และ "___ cat" ใช้อะไร?',a:'an umbrella (สระ u) | a cat (พยัญชนะ c)'}},
+    {t:'กฎการใช้ THE',f:'ใช้ the เมื่อ: ระบุชัดว่าอันไหน / มีอันเดียวในโลก / กล่าวซ้ำ / superlative',d:'✅ the sun / the moon / the Earth\n✅ the best student in class\n✅ I saw a dog. The dog was black. (กล่าวซ้ำ)\n❌ ไม่ใช้กับ: ชื่อคน, ชื่อประเทศส่วนใหญ่, ภาษา, กีฬา, อาหารทั่วไป',ex:{q:'"___ Great Wall of China" ใช้ the หรือเปล่า?',a:'Yes! The Great Wall of China (มีอันเดียว และระบุชัด)'}},
+    {t:'เมื่อไหร่ไม่ต้องใส่ Article',f:'ไม่ใส่กับ: ชื่อคน, ชื่อประเทศ, ภาษา, กีฬา, วัน/เดือน, อาหารทั่วไป',d:'❌ The Thailand → ✅ Thailand\n❌ The English language → ✅ English\n❌ a football → ✅ football (กีฬาทั่วไป)\n⚠️ ยกเว้นบางประเทศ: the USA, the UK, the Netherlands',ex:{q:'"___ French is a beautiful language."',a:'ไม่ต้องใส่ article! French is a beautiful language.'}},
+  ]},
+  {icon:'🔄',title:'Active vs Passive Voice',items:[
+    {t:'โครงสร้าง Passive Voice',f:'Subject + is/am/are/was/were + V3 + (by + agent)',d:'Active → Passive:\n"subject" ของ Active เป็น "by + agent"\nObject ของ Active กลายเป็น Subject ของ Passive\nใช้เมื่อ: ไม่รู้ผู้กระทำ / ผู้กระทำไม่สำคัญ / เน้นสิ่งที่ถูกกระทำ',ex:{q:'"The teacher corrected the papers." → Passive?',a:'The papers were corrected (by the teacher).'}},
+    {t:'Passive ทุก Tense',f:'',d:'',table:{heads:['Tense','Passive'],rows:[['Simple Present','is/are + V3'],['Simple Past','was/were + V3'],['Future (will)','will be + V3'],['Present Perfect','has/have been + V3'],['Present Continuous','is/are being + V3'],['Modal (can/must)','can/must be + V3']]}},
+  ]},
+  {icon:'📚',title:'Parts of Speech – ชนิดของคำ',items:[
+    {t:'8 ชนิดของคำ',f:'',d:'',table:{heads:['ชนิดคำ','ภาษาอังกฤษ','ตัวอย่าง'],rows:[['คำนาม','Noun','cat, love, Bangkok, happiness'],['คำสรรพนาม','Pronoun','I, you, he, she, it, we, they'],['คำกริยา','Verb','run, eat, is, have, make'],['คำคุณศัพท์','Adjective','big, happy, red, beautiful'],['คำกริยาวิเศษณ์','Adverb','quickly, very, always, here'],['คำบุพบท','Preposition','in, on, at, by, with, from'],['คำสันธาน','Conjunction','and, but, or, because, although'],['คำอุทาน','Interjection','Wow! Oh! Ouch! Hey!']]}},
+    {t:'Noun: นาม',f:'Countable (นับได้): a book / two books\nUncountable (นับไม่ได้): water, information, advice',d:'Uncountable ไม่ใช้ a/an และไม่มี s!\n❌ an information → ✅ some information\nCommon Uncountable: water, air, music, rice, money, news, advice',ex:{q:'"Can I have some ___?" advice หรือ advices?',a:'advice (uncountable ไม่มี s)'}},
+    {t:'Adjective vs Adverb',f:'Adjective: ขยาย Noun (อยู่หน้า Noun หรือหลัง be)\nAdverb: ขยาย Verb, Adjective, หรือ Adverb อื่น',d:'Adj → Adv: เติม -ly ส่วนใหญ่\nquick → quickly | careful → carefully | happy → happily\n⚠️ ยกเว้น: fast (ทั้ง adj/adv), hard (ทั้ง adj/adv)\nhardly ≠ hard: hardly = แทบจะไม่',ex:{q:'"She speaks ___ ." quiet หรือ quietly?',a:'quietly (ขยาย Verb "speaks" ต้องใช้ Adverb)'}},
+  ]},
+  {icon:'🤝',title:'Prepositions – คำบุพบท',items:[
+    {t:'Prepositions of Time: at / in / on',f:'AT = เวลาจุด (เวลานาฬิกา, ช่วงเวลาสั้น)\nIN = ช่วงเวลายาว (เดือน, ปี, ฤดู, ช่วงวัน)\nON = วัน, วันที่, โอกาสพิเศษ',d:'at: at 3pm / at noon / at midnight / at the weekend\nin: in January / in 2024 / in summer / in the morning\non: on Monday / on 5 May / on my birthday / on New Year\'s Day',ex:{q:'"___ Friday morning" ใช้อะไร?',a:'on Friday morning (วัน = on)'}},
+    {t:'Prepositions of Place: at / in / on',f:'AT = จุดเฉพาะ (สถานที่ทั่วไป)\nIN = ภายใน (มีขอบเขต)\nON = บนพื้นผิว',d:'at: at school / at the station / at home\nin: in the room / in Bangkok / in the box\non: on the table / on the wall / on the bus\n⚠️ on the bus/train/plane แต่ in the car/taxi',ex:{q:'"The keys are ___ the table."',a:'on the table (บนพื้นผิว)'}},
+    {t:'Prepositions ที่ใช้กับ Adjective บ่อย',f:'',d:'good AT (ถนัด), interested IN, afraid OF\nproud OF, tired OF, bored WITH\ndifferent FROM, similar TO\nresponsible FOR, married TO\ndependent ON, worried ABOUT',ex:{q:'"She is good ___ mathematics."',a:'good AT mathematics'}},
+  ]},
+  {icon:'💡',title:'คำถาม คำสั่ง และ Reported Speech',items:[
+    {t:'Question Words',f:'',d:'',table:{heads:['คำถาม','ถามเรื่อง','ตัวอย่าง'],rows:[['What','สิ่งของ, เรื่องราว','What is your job?'],['Who','คน (subject)','Who called you?'],['Whom','คน (object)','Whom did you call?'],['Which','เลือกจากตัวเลือก','Which one do you prefer?'],['Where','สถานที่','Where do you live?'],['When','เวลา','When is your birthday?'],['Why','เหตุผล','Why are you late?'],['How','วิธีการ, ความเป็นอยู่','How do you feel?'],['How many','จำนวน (นับได้)','How many cats do you have?'],['How much','จำนวน (นับไม่ได้)/ราคา','How much does it cost?']]}},
+    {t:'Reported Speech (Indirect Speech)',f:'Direct → Indirect: เปลี่ยน Tense ถอยหลัง 1 ขั้น\nPresent → Past\nPast → Past Perfect\nwill → would | can → could | may → might',d:'เปลี่ยนสรรพนาม: I→he/she | we→they | you→I/they\nเปลี่ยนเวลา: today→that day, tomorrow→next day\nhere→there, this→that, now→then',ex:{q:'He said "I am tired." → Indirect?',a:'He said (that) he was tired. (am → was)'}},
+  ]},
+  {icon:'🌟',title:'Vocabulary ที่ควรรู้ – คำศัพท์สำคัญ',items:[
+    {t:'คำตรงข้าม (Antonyms) ที่ออกบ่อย',f:'',d:'big ↔ small/little | hot ↔ cold | fast ↔ slow\ntall ↔ short | strong ↔ weak | old ↔ young/new\nhappy ↔ sad/unhappy | beautiful ↔ ugly | rich ↔ poor\nhard ↔ easy/soft | loud ↔ quiet | light ↔ dark/heavy\nbright ↔ dim | brave ↔ cowardly | generous ↔ selfish',ex:{q:'คำตรงข้ามของ "ancient" คือ?',a:'modern หรือ contemporary (ทันสมัย)'}},
+    {t:'คำที่มักสับสน (Confusing Words)',f:'',d:'their (ของพวกเขา) / there (ที่นั่น) / they\'re (they are)\nyour (ของคุณ) / you\'re (you are)\nits (ของมัน) / it\'s (it is)\naffect (verb: ส่งผล) / effect (noun: ผลที่เกิด)\nthen (จากนั้น) / than (มากกว่า)\nlose (แพ้/หาย) / loose (หลวม)',ex:{q:'"___ going to ___ house over ___."',a:'They\'re (they are) going to their house over there.'}},
+    {t:'Prefix และ Suffix สำคัญ',f:'',d:'Prefix (คำนำหน้า):\nun- = ไม่ (unhappy, unfair)\ndis- = ไม่ (disagree, dishonest)\nre- = ทำอีก (review, redo, return)\nover- = มากเกิน (overeat, overwork)\npre- = ก่อน (preview, prepare)\n\nSuffix (คำท้าย):\n-tion/-sion = Noun (action, decision)\n-ness = Noun (happiness, kindness)\n-ful = Adj (beautiful, careful)\n-less = Adj ไม่มี (careless, hopeless)\n-ly = Adv (quickly, slowly)\n-er/-or = คนที่ทำ (teacher, actor)',ex:{q:'"unhappy" prefix un- หมายถึงอะไร?',a:'un- = ไม่ ดังนั้น unhappy = ไม่มีความสุข'}},
+    {t:'Phrasal Verbs ที่ออกบ่อย',f:'',d:'give up = ยอมแพ้, เลิก\ngive in = ยอมจำนน\nturn on/off = เปิด/ปิด\nput on = สวมใส่\ntake off = ถอดออก, (เครื่องบิน)ขึ้น\nrun out of = หมด\nlook after = ดูแล\nlook for = หา\nbreak down = พัง\ncarry on = ทำต่อไป\nfind out = ค้นพบ\nset up = ก่อตั้ง, ติดตั้ง',ex:{q:'"She ___ smoking last year." (เลิก)',a:'gave up: She gave up smoking last year.'}},
+  ]},
+  {icon:'✍️',title:'Comparative & Superlative',items:[
+    {t:'การเปรียบเทียบ',f:'Comparative (เปรียบ 2 สิ่ง): -er / more + Adj\nSuperlative (เปรียบในกลุ่ม): -est / most + Adj\nเทียบเท่า: as + Adj + as',d:'พยางค์เดียว → เติม -er/-est: tall→taller→tallest\nจบด้วย -e → เติม -r/-st: large→larger→largest\nจบ consonant+vowel+consonant → double: big→bigger→biggest\n2+ พยางค์ → more/most: beautiful→more beautiful→most beautiful',ex:{q:'Comparative/Superlative ของ "good"?',a:'good → better → best (Irregular)'}},
+    {t:'Irregular Comparatives',f:'',d:'',table:{heads:['Adj','Comparative','Superlative'],rows:[['good','better','best'],['bad','worse','worst'],['far','farther/further','farthest/furthest'],['many/much','more','most'],['little','less','least'],['old','older/elder','oldest/eldest']]}},
+  ]},
+]
+};
+
+function guideHTML(){
+  const s=st.subj||'math';
+  const tabCls={science:'active-sci',math:'active-math',english:'active-eng'};
+  const topics=GUIDE[s];
+  const color={science:'sci',math:'math',english:'eng'}[s];
+  const topicCards=topics.map((t,ti)=>{
+    const bodyId=`tb-${ti}`;
+    const items=t.items.map((item,ii)=>{
+      let content='';
+      if(item.table){
+        content+=`<div style="overflow-x:auto"><table class="eng-table"><thead><tr>${item.table.heads.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${item.table.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+      }
+      if(item.f){content+=`<div style="font-size:16px;font-weight:900;color:#1E293B;background:white;border-radius:10px;padding:10px 13px;border:1.5px solid #E2E8F0;margin:8px 0;font-family:monospace;line-height:1.7;white-space:pre-wrap">${item.f}</div>`;}
+      if(item.d){content+=`<div style="font-size:13px;color:#475569;line-height:1.7;white-space:pre-wrap;margin-bottom:6px">${item.d}</div>`;}
+      if(item.ex){content+=`<div class="formula-ex"><div class="ex-label">ตัวอย่าง</div><div class="ex-q">❓ ${item.ex.q}</div><div class="ex-a ${color}">✅ ${item.ex.a}</div></div>`;}
+      return `<div class="formula-box ${color}" style="margin-bottom:12px"><div class="formula-title">${item.t}</div>${content}</div>`;
+    }).join('');
+    return `<div class="topic-card">
+      <div class="topic-head" onclick="toggleTopic('${bodyId}')">
+        <div class="topic-icon" style="background:${color==='sci'?'#DCFCE7':color==='math'?'#EDE9FE':'#DBEAFE'}">${t.icon}</div>
+        <div class="topic-title">${t.title}</div>
+        <div class="topic-chevron" id="${bodyId}-chev">▼</div>
+      </div>
+      <div class="topic-body" id="${bodyId}">${items}</div>
+    </div>`;
+  }).join('');
+
+  return`
+  <button class="back" onclick="st.screen='home';render()">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
+    กลับหน้าหลัก
+  </button>
+  <div style="margin-bottom:6px">
+    <div style="font-size:22px;font-weight:900;color:#1E293B;margin-bottom:4px">📖 สูตร &amp; วิธีคิด</div>
+    <div style="font-size:13px;color:#64748B">อ่านก่อนสอบ เข้าใจแล้วทำได้แน่นอน!</div>
+  </div>
+  <div class="guide-subj-tabs">
+    <button class="gtab${s==='science'?' active-sci':''}" onclick="st.subj='science';render()">🔬 วิทย์</button>
+    <button class="gtab${s==='math'?' active-math':''}" onclick="st.subj='math';render()">📐 คณิต</button>
+    <button class="gtab${s==='english'?' active-eng':''}" onclick="st.subj='english';render()">🔤 อังกฤษ</button>
+  </div>
+  ${topicCards}
+  <div style="margin-top:16px">
+    <button class="btn-p ${s==='science'?'sci-nxt':s==='math'?'math-nxt':'eng-nxt'}" onclick="pick('${s}')" style="width:100%">สอบ${s==='science'?'วิทยาศาสตร์':s==='math'?'คณิตศาสตร์':'ภาษาอังกฤษ'}เลย →</button>
+  </div>`;
+}
+
+function homeHTML(){
+  return`
+  <div class="dc" style="width:90px;height:90px;top:-25px;right:-20px;background:#FEF3C7;opacity:.55"></div>
+  <div class="dc" style="width:55px;height:55px;top:160px;left:-18px;background:#DCFCE7;opacity:.5"></div>
+  <div class="dc" style="width:70px;height:70px;bottom:60px;right:-18px;background:#DBEAFE;opacity:.5"></div>
+  <div class="dc" style="width:40px;height:40px;bottom:180px;left:10px;background:#EDE9FE;opacity:.45"></div>
+  <div class="logo">
+    <div class="logo-box">
+      <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="4" width="26" height="22" rx="4" fill="#FCD34D"/>
+        <rect x="8" y="9" width="18" height="3" rx="1.5" fill="#92400E"/>
+        <rect x="8" y="15" width="12" height="3" rx="1.5" fill="#B45309"/>
+        <circle cx="30" cy="30" r="8" fill="#34D399"/>
+        <line x1="27" y1="30" x2="33" y2="30" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="30" y1="27" x2="30" y2="33" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="app-title">QuizTime!</div>
+    <div class="app-sub">ทดสอบความรู้ สนุกทุกวิชา &bull; 60 ข้อ/วิชา/ชั้น</div>
+  </div>
+  <div class="section-label">เลือกวิชาที่ต้องการสอบ</div>
+  <div class="cards">
+    <button class="card-btn sci-card" onclick="pick('science')">
+      <div class="bnc">${msvg('science',64)}</div>
+      <div style="flex:1"><div class="card-name">วิทยาศาสตร์</div><div class="card-hint">ม.1–ม.4 &bull; 60 ข้อ &bull; สุ่มทุกครั้ง</div></div>
+    </button>
+    <div style="text-align:right;margin-top:-6px;margin-bottom:6px;padding-right:4px">
+      <button class="guide-link" onclick="openGuide('science')">📖 ดูสูตร &amp; วิธีคิด</button>
+    </div>
+    <button class="card-btn math-card" onclick="pick('math')">
+      <div class="bnc2">${msvg('math',64)}</div>
+      <div style="flex:1"><div class="card-name">คณิตศาสตร์</div><div class="card-hint">ม.1–ม.4 &bull; 60 ข้อ &bull; สุ่มทุกครั้ง</div></div>
+    </button>
+    <div style="text-align:right;margin-top:-6px;margin-bottom:6px;padding-right:4px">
+      <button class="guide-link" onclick="openGuide('math')">📖 ดูสูตร &amp; วิธีคิด</button>
+    </div>
+    <button class="card-btn eng-card" onclick="pick('english')">
+      <div class="bnc3">${msvg('english',64)}</div>
+      <div style="flex:1"><div class="card-name">ภาษาอังกฤษ</div><div class="card-hint">ม.1–ม.4 &bull; 60 ข้อ &bull; สุ่มทุกครั้ง</div></div>
+    </button>
+    <div style="text-align:right;margin-top:-6px;padding-right:4px">
+      <button class="guide-link" onclick="openGuide('english')">📖 ดูสูตร &amp; วิธีคิด</button>
+    </div>
+  </div>`;
+}
+
+function gradeHTML(){
+  const s=SC[st.subj];
+  return`
+  <button class="back" onclick="st.screen='home';render()">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
+    กลับหน้าหลัก
+  </button>
+  <div class="mascot-center bnc">${msvg(st.subj,98)}</div>
+  <div class="grade-header">
+    <div class="grade-title">${s.name}</div>
+    <div class="grade-sub">ใส่ชื่อเล่น เลือกระดับชั้น และจำนวนข้อที่ต้องการทำ</div>
+  </div>
+  <div class="player-card">
+    <div class="player-label">ชื่อเล่นก่อนเริ่มเล่น</div>
+    <input class="player-input" id="nicknameInput" type="text" maxlength="40" placeholder="เช่น น้องมายด์" value="${esc(st.nickname)}" oninput="st.nickname=this.value">
+    <div class="player-help">ระบบจะบันทึกชื่อเล่นและคะแนนเพื่อสรุปผลการเล่นรายคนให้ผู้ดูแลดูใน Google Sheets</div>
+    <div class="player-warn" id="nickWarn">กรุณาใส่ชื่อเล่นก่อนเริ่มเล่น</div>
+  </div>
+  <div style="margin-bottom:14px">
+    <div class="section-label">จำนวนข้อที่ต้องการ (สุ่มจาก 60 ข้อ)</div>
+    <div class="set-row">
+      ${[5,10,15,20].map(n=>`<button class="sbtn${st.setSize===n?' active':''}" onclick="st.setSize=${n};render()">${n} ข้อ</button>`).join('')}
+    </div>
+    <div class="set-row" style="margin-top:8px">
+      ${[30,40,50,60].map(n=>`<button class="sbtn${st.setSize===n?' active':''}" onclick="st.setSize=${n};render()">${n} ข้อ</button>`).join('')}
+    </div>
+  </div>
+  <div class="section-label">เลือกระดับชั้น</div>
+  <div class="grade-grid">
+    ${[1,2,3,4].map(g=>`<button class="gbtn g${g}" onclick="start(${g})">
+      <div style="font-size:12px;font-weight:700;opacity:.6;margin-bottom:3px">ระดับ</div>ม.${g}
+    </button>`).join('')}
+  </div>`;
+}
+
+function quizHTML(){
+  const s=SC[st.subj],q=st.qs[st.qi];
+  const pct=Math.round(((st.qi+1)/st.qs.length)*100);
+  const L=['A','B','C','D'];
+  return`
+  <div class="quiz-nav">
+    <button class="home-btn" onclick="showConfirm()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      หน้าแรก
+    </button>
+    <div class="qz-score">&#9733; ${st.score}</div>
+  </div>
+  <div style="font-size:11px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">${s.name} &bull; ม.${st.grade} &bull; ${st.qs.length} ข้อ</div>
+  <div class="prog"><div class="prog-fill ${s.bar}" style="width:${pct}%"></div></div>
+  <div class="qcard">
+    <div class="qnum">ข้อที่ ${st.qi+1} / ${st.qs.length}</div>
+    <div class="qtext">${q.q}</div>
+  </div>
+  <div class="opts">
+    ${q.o.map((op,i)=>`<button class="opt" id="o${i}" onclick="answer(${i})"><div class="olabel">${L[i]}</div>${op}</button>`).join('')}
+  </div>
+  <div class="fb" id="fb"></div>
+  <button class="nxt ${s.btn}" id="nxt" onclick="nxt()">${st.qi<st.qs.length-1?'ข้อถัดไป &rarr;':'ดูผลลัพธ์ &rarr;'}</button>`;
+}
+
+function resultHTML(){
+  const s=SC[st.subj],sc=st.score,tot=st.qs.length;
+  const pct=Math.round(sc/tot*100);
+  const ns=pct>=90?3:pct>=60?2:pct>=30?1:0;
+  const msgs=[
+    {t:"ลองใหม่อีกครั้งนะ!",m:"ไม่เป็นไรเลย ทบทวนบทเรียนแล้วมาลองใหม่ได้เลย!"},
+    {t:"เกือบแล้ว พยายามต่อไป!",m:"ตอบถูกหลายข้อมาก ลองทำอีกครั้งเพื่อให้ดีขึ้น!"},
+    {t:"ดีมาก เก่งมาก!",m:"เก็บคะแนนได้ดีทีเดียว ลองให้ได้ 90% ขึ้นไปนะ!"},
+    {t:"ยอดเยี่ยมสุดๆ!",m:"สุดยอดมาก! ตอบถูกเกือบหมดเลย เก่งจริงๆ!"}
+  ];
+  const m=msgs[ns];
+  const saveMap={
+    idle:'',
+    saving:'กำลังบันทึกคะแนน...',
+    saved:'บันทึกคะแนนเรียบร้อย',
+    'local-only':'ยังไม่ได้ตั้งค่า Google Sheets — ตอนนี้บันทึกไว้ในเครื่องนี้เท่านั้น',
+    error:'บันทึกคะแนนไม่สำเร็จ ลองเช็ก URL ของ Google Apps Script'
+  };
+  return`
+  <div class="res">
+    <div style="margin-bottom:10px">
+      <div class="rand-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
+          <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+        </svg>
+        ข้อสอบสุ่มใหม่ทุกครั้งที่กดทำ!
+      </div>
+    </div>
+    <div class="mascot-center bnc">${msvg(st.subj,90)}</div>
+    <div class="score-ring">
+      <div class="score-n">${sc}</div>
+      <div class="score-of">จาก ${tot} ข้อ (${pct}%)</div>
+    </div>
+    <div class="stars">${[0,1,2].map(i=>starSVG(i<ns)).join('')}</div>
+    <div class="res-title">${m.t}</div>
+    <div class="res-msg">${m.m}</div>
+    <div style="background:#F8FAFC;border-radius:14px;padding:13px 16px;margin-bottom:22px;font-size:13px;color:#475569;text-align:left;line-height:1.7">
+      <strong style="color:#1E293B">สถิติของคุณ</strong><br>
+      👤 ชื่อเล่น: ${esc(st.nickname)||'-'}<br>
+      ✅ ตอบถูก: ${sc} ข้อ &nbsp;|&nbsp; ❌ ตอบผิด: ${tot-sc} ข้อ<br>
+      📊 คะแนน: ${pct}% &nbsp;|&nbsp; 🎯 ระดับ ม.${st.grade}
+      ${saveMap[st.saveStatus]?`<div class="status-note">📝 ${saveMap[st.saveStatus]}</div>`:''}
+    </div>
+    <div class="res-btns">
+      <button class="btn-p ${s.btn}" onclick="start(${st.grade})">สุ่มข้อสอบใหม่อีกครั้ง 🎲</button>
+      <button class="btn-s" onclick="st.screen='grade';render()">เปลี่ยนระดับ / จำนวนข้อ</button>
+      <button class="btn-s" onclick="st.screen='home';render()">เปลี่ยนวิชา</button>
+    </div>
+  </div>`;
+}
+
+/* ── MODAL ── */
+function showConfirm(){
+  if(document.getElementById('confirm-modal'))return;
+  const d=document.createElement('div');
+  d.className='modal-overlay';d.id='confirm-modal';
+  d.innerHTML=`
+    <div class="modal-box">
+      <div class="modal-icon">🏠</div>
+      <div class="modal-title">กลับหน้าแรก?</div>
+      <div class="modal-msg">คะแนนและข้อสอบที่ทำไปแล้ว<br>จะหายไปนะ ยืนยันไหม?</div>
+      <div class="modal-btns">
+        <button class="modal-cancel" onclick="closeConfirm()">เล่นต่อ</button>
+        <button class="modal-confirm" onclick="goHome()">กลับหน้าแรก</button>
+      </div>
+    </div>`;
+  document.body.appendChild(d);
+  d.addEventListener('click',function(e){if(e.target===d)closeConfirm();});
+}
+function closeConfirm(){const d=document.getElementById('confirm-modal');if(d)d.remove();}
+function goHome(){
+  closeConfirm();
+  st.screen='home';st.subj=null;st.grade=null;st.qs=[];st.qi=0;st.score=0;st.ans=false;st.saveStatus='idle';st.attemptId=null;
+  render();
+}
+
+/* ── ACTIONS ── */
+function pick(s){st.subj=s;st.screen='grade';render()}
+function start(g){
+  const raw=(document.getElementById('nicknameInput')?.value??st.nickname??'').trim();
+  st.nickname=raw;
+  const warn=document.getElementById('nickWarn');
+  if(!raw){
+    if(warn)warn.classList.add('show');
+    const inp=document.getElementById('nicknameInput');
+    if(inp){inp.focus();inp.scrollIntoView({behavior:'smooth',block:'center'});}
+    return;
+  }
+  if(warn)warn.classList.remove('show');
+  st.grade=g;
+  st.qs=prepQ(st.subj,g,Math.min(st.setSize,QB[st.subj][g].length));
+  st.qi=0;st.score=0;st.ans=false;st.saveStatus='idle';st.attemptId=newAttemptId();
+  st.screen='quiz';render();
+}
+function answer(i){
+  if(st.ans)return;st.ans=true;
+  const q=st.qs[st.qi],cor=q.a,ok=i===cor;
+  if(ok)st.score++;
+  document.querySelectorAll('.opt').forEach((b,idx)=>{
+    b.classList.add('done');
+    if(idx===cor)b.classList.add('correct');
+    else if(idx===i&&!ok)b.classList.add('wrong');
+  });
+  const fb=document.getElementById('fb');
+  const praise=['เยี่ยมมาก! ถูกต้อง! 🎉','สุดยอด! ตอบถูกเลย! ⭐','ใช่เลย! เก่งมาก! 🌟','ถูกต้อง! ฉลาดมากเลย! 🏆'];
+  fb.textContent=ok?praise[Math.floor(Math.random()*praise.length)]:`ยังไม่ถูกนะ 😅 คำตอบที่ถูกต้องคือ "${q.o[cor]}"`;
+  fb.className='fb show '+(ok?'ok':'no');
+  document.getElementById('nxt').classList.add('show');
+}
+function nxt(){
+  st.qi++;st.ans=false;
+  if(st.qi>=st.qs.length){
+    st.screen='result';
+    render();
+    sendScoreToSheet().finally(()=>{if(st.screen==='result')render();});
+    return;
+  }
+  render();
+}
+
+
+/*
+Google Sheets setup (สรุปสั้น):
+1) สร้าง Google Sheet และ Apps Script
+2) วางฟังก์ชัน doPost ใน Apps Script
+3) Deploy > New deployment > Web app > Anyone
+4) เอา URL มาใส่ในตัวแปร SHEET_WEB_APP_URL ด้านบน
+ตัวอย่าง Apps Script:
+
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Scores') || SpreadsheetApp.getActiveSpreadsheet().insertSheet('Scores');
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['playedAt','attemptId','nickname','subjectKey','subjectName','grade','totalQuestions','score','wrong','percent','deviceId','userAgent']);
+  }
+  var data = JSON.parse(e.postData.contents || '{}');
+  sheet.appendRow([
+    data.playedAt || '',
+    data.attemptId || '',
+    data.nickname || '',
+    data.subjectKey || '',
+    data.subjectName || '',
+    data.grade || '',
+    data.totalQuestions || '',
+    data.score || '',
+    data.wrong || '',
+    data.percent || '',
+    data.deviceId || '',
+    data.userAgent || ''
+  ]);
+  return ContentService.createTextOutput(JSON.stringify({ok:true}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+*/
+
+render();
+</script>
+</body>
+</html>
